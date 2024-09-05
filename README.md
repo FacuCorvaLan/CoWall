@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # cowall
 
 ## Project setup
@@ -22,3 +23,7 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# Cowall
+Proyecto Final Lab 3
+>>>>>>> origin/main
