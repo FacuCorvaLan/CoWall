@@ -30,6 +30,10 @@
   justify-content: space-between;
 }
 
+.logoCw{
+  display: flex;
+}
+
 .imgLogo{
   max-width: 55px;
 }
