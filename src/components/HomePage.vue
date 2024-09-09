@@ -112,6 +112,6 @@ footer{
 
 .btnLogin:active {
   background-color: rgb(24, 174, 246); 
-  color: black; 
+  color: white; 
 }
 </style>
