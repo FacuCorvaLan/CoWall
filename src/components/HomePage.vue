@@ -15,7 +15,7 @@
         <p>Haz crecer tus inversiones hoy.</p>
         <div class="BtnSesion">
           <form>
-            <input type="button" class="btnLogin" value="Iniciar Sesión">
+            <input @click="showLogin" type="button" class="btnLogin" value="Iniciar Sesión">
           </form>
       </div>
       </div>
@@ -25,8 +25,30 @@
       </figure>
     </div>
   </body>
+  <div class="newLogin"><loginUsers :isVisible = loginVisible /></div>
   <footer>Copyright</footer>
 </template>
+
+<script>
+import loginUsers from "../components/LoginUsers.vue"
+
+export default{
+components: {
+  loginUsers
+},
+data() {
+  return {
+    loginVisible: false
+  }
+},
+
+methods: {
+  showLogin (){
+    this.loginVisible = !this.loginVisible;
+  }
+}
+}
+</script>
 
 <style>
 body{
@@ -37,9 +59,14 @@ footer{
   background-color: rgb(31, 31, 58);
   color:white;
   font-size: 30px;
+  padding: 70px;
 }
 
 .headerCw{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   margin-bottom: 50px;
   background-color: black;
 }
@@ -77,6 +104,7 @@ footer{
   justify-content: center;
   align-items: center;
   gap: 20px;
+  margin-top: 60px;
   font-family: Graphik Web, Helvetica Neue, Helvetica, Arial, Verdana, sans-serif;
 }
 
@@ -113,5 +141,12 @@ footer{
 .btnLogin:active {
   background-color: rgb(24, 174, 246); 
   color: white; 
+}
+
+.newLogin{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
