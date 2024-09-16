@@ -24,29 +24,34 @@
         <figcaption>Designed by Freepik.</figcaption>
       </figure>
     </div>
-  </body>
-  <div class="newLogin"><loginUsers :isVisible = loginVisible /></div>
+    <loginUsers v-if="loginVisible" class="newLogin" @loginComplete="closeLogin"/>
   <footer>Copyright</footer>
+  </body>
 </template>
 
 <script>
-import loginUsers from "../components/LoginUsers.vue"
+import loginUsers from "../views/LoginUsers.vue"
 
 export default{
-components: {
-  loginUsers
-},
-data() {
-  return {
-    loginVisible: false
-  }
-},
+  components: {
+    loginUsers
+  },
 
-methods: {
-  showLogin (){
-    this.loginVisible = !this.loginVisible;
+  data() {
+    return {
+      loginVisible: false
+    }
+  },
+
+  methods: {
+    showLogin(){
+      this.loginVisible = !this.loginVisible;
+    },
+
+    closeLogin(){
+      this.loginVisible = false;
+    }
   }
-}
 }
 </script>
 
@@ -105,12 +110,25 @@ footer{
   align-items: center;
   gap: 20px;
   margin-top: 60px;
-  font-family: Graphik Web, Helvetica Neue, Helvetica, Arial, Verdana, sans-serif;
+}
+
+.containerPpal h1{
+  font-family: "Inria Sans", sans-serif;
+  font-weight: bold;
+  font-style: normal;
 }
 
 .containerPpal p{
-  font-family: sans-serif;
+  font-family: "Inria Sans", sans-serif;
+  font-style: normal;
   font-weight: bolder;
+  font-size: 16px;
+}
+
+figcaption{
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .loginUsers{
@@ -118,20 +136,20 @@ footer{
   color: white;
   display: flex;
   flex-direction: column;
-  font-family: Graphik Web, Helvetica Neue, Helvetica, Arial, Verdana, sans-serif;
 }
 
 
 .btnLogin{
-  max-width: 200px;
-  font-size: 17px;
+  font-family: "Inria Sans", sans-serif;
+  font-weight: bolder;
+  font-style: normal;
+  max-width: fit-content;
+  font-size: 18px;
   height: 40px;
   background-color: transparent;
   border-color: rgb(24, 174, 246);
   border-radius: 18px;
   border-style: solid;
-  font-family: "Titillium Web", sans-serif;
-  font-style: normal;
   margin-right: 20px;
   margin-bottom: 10px;
   transition: background-color 0.5s; 
@@ -144,9 +162,19 @@ footer{
 }
 
 .newLogin{
+  background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.noneStyle{
+  display: none;
 }
 </style>
