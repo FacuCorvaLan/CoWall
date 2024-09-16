@@ -11,7 +11,7 @@
             <p>Contraseña</p>
             <input class="inputPass" type="text" v-model="passwordUser" placeHolder="Ingresar contraseña...">  
           </section>
-          <section class="containerBtnIngresar">
+          <section class="btnAndMsjError">
             <input class="btnIngresar" type="button" value="Ingresar" @click="finishLogin"/>
             <p class="msjError">{{messageError}}</p>
           </section>
@@ -63,8 +63,9 @@ export default {
 }
 
 .containerLogin{
+  display: flex;
   background-color: rgb(218, 218, 248);
-  padding: 60px;
+  padding: 80px;
   border-radius: 50px;
 }
 
@@ -75,11 +76,16 @@ export default {
 .formStyle{
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  width: 250px;
+  height: 300px;
 }
 
 .formStyle p{
 margin-bottom: 10px;
+}
+
+.formStyle h1{
+  margin-top: 0;
 }
 
 .containerBtnIngresar{
@@ -110,7 +116,7 @@ margin-bottom: 10px;
   border-color: rgb(24, 174, 246);
   border-radius: 18px;
   border-style: solid;
-  margin: 15px 0;
+  margin-top: 15px;
   transition: background-color 0.5s; 
   box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.2);
 }
@@ -120,4 +126,16 @@ margin-bottom: 10px;
   color: white; 
 }
 
+.BtnAndMsjError{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.msjError{
+  color: red;
+  font-weight: bold;
+  min-height: 20px;
+  font-size: 15px;
+}
 </style>
