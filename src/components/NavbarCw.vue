@@ -5,13 +5,42 @@
         <img src="../assets/Images/logo-CoWall.png" class="imgLogo">
         <p class="NameWebsite">CoWall</p>
       </div>
-      <div></div>
+      <div class="containerMenu">
+        <menuNav/>
+      </div>
     </div>
   </header>
 </template>
 
+<script>
+import menuNav from "../components/menuNav.vue"
+
+export default{
+
+  components: {
+    menuNav,
+  },
+
+  data() {
+    return{
+      nameUser:"Facu Corvalán",
+      flagList: false
+    }
+  },
+
+  methods: {
+    showList() {
+      this.flagList = !this.flagList;
+    }
+  }
+
+}
+</script>
+
 <style>
 .headerCw{
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
@@ -47,4 +76,15 @@
   color: rgb(24, 174, 246);
   margin: 0;
 }
+
+.containerMenu{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+
 </style>

@@ -1,14 +1,15 @@
 <template>
   <div v-if="isVisible" :class="{'bodyLogin':isVisible, 'noneStyle': !isVisible}">
+    <navbarCw/>
       <div class="containerLogin">
         <form v-show="isVisible" class="formStyle">
           <h1>Iniciá sesión</h1>
           <section class="userName">
-            <p>Nombre de usuario</p>
+            <h4>Nombre de usuario</h4>
             <input class="inputName" type="text" v-model="nameUser" placeHolder="Ingresar nombre de usuario...">
           </section>
           <section class="userPassword">
-            <p>Contraseña</p>
+            <h4>Contraseña</h4>
             <input class="inputPass" type="text" v-model="passwordUser" placeHolder="Ingresar contraseña...">  
           </section>
           <section class="btnAndMsjError">
@@ -21,14 +22,20 @@
 </template>
 
 <script>
+import navbarCw from "../components/NavbarCw.vue"
+
 export default {
+
+  components: {
+    navbarCw
+  },
 
   data() {
     return {
       messageError: "",
       nameUser: "",
       passwordUser: "",
-      isVisible: true
+      isVisible: true,
     };
   },
 
@@ -43,7 +50,7 @@ export default {
           this.isVisible = !this.isVisible;
           this.$emit('loginComplete');
         }
-    }
+    },
   }
 };
 </script>
@@ -65,8 +72,11 @@ export default {
 .containerLogin{
   display: flex;
   background-color: rgb(218, 218, 248);
-  padding: 80px;
+  padding: 100px 100px;
   border-radius: 50px;
+  border-style: solid;
+  border-color: rgb(24, 174, 246);
+  border-width: 1px;
 }
 
 .noneStyle{
@@ -80,12 +90,15 @@ export default {
   height: 300px;
 }
 
-.formStyle p{
-margin-bottom: 10px;
-}
-
 .formStyle h1{
   margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.formStyle h4{
+  font-weight: bolder;
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .containerBtnIngresar{
@@ -93,15 +106,10 @@ margin-bottom: 10px;
   justify-content: center;
 }
 
-.userName, .userPassword{
-  font-weight: bolder;
-  font-size: 20px;
-}
-
 .inputName, .inputPass{
-  height: 20px;
-  width: 200px;
-  border-radius: 10px;
+  height: 30px;
+  width: 220px;
+  border-radius: 30px;
   border-color: rgb(24, 174, 246);
   transition: background-color 0.5s; 
   box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.2);

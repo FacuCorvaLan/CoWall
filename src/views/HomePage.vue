@@ -1,6 +1,5 @@
 <template>
   <navbarCw/>
-  
   <body>
     <div class="containerPpal">
       <div>
@@ -18,7 +17,9 @@
       </figure>
     </div>
     <loginUsers v-if="loginVisible" class="newLogin" @loginComplete="closeLogin"/>
-  <footer>Copyright</footer>
+  <footer>
+    <p>Copyright</p>
+  </footer>
   </body>
 </template>
 
@@ -29,7 +30,7 @@ import navbarCw from "../components/NavbarCw.vue"
 export default{
   components: {
     navbarCw,
-    loginUsers
+    loginUsers,
   },
 
   data() {
@@ -56,6 +57,8 @@ body{
 }
 
 footer{
+  display: flex;
+  justify-content: center;
   background-color: rgb(31, 31, 58);
   color:white;
   font-size: 30px;
@@ -120,7 +123,7 @@ figcaption{
 }
 
 .newLogin{
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: white;
   position: fixed;
   top: 50%;
   left: 50%;
