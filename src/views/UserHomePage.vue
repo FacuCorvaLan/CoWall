@@ -1,5 +1,7 @@
 <template>
-<navbarCw/>
+<div>
+  <navbarCw/>
+</div>
 </template>
 
 <script>
