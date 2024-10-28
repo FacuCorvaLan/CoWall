@@ -17,6 +17,8 @@
       </figure>
     </div>
     <loginUsers v-if="loginVisible" class="newLogin" @loginComplete="closeLogin"/>
+
+    <!-- SIRVE PARA PROBAR COSAS. SACAR FUERA DEL COMENTARIO ==> <myWallet/>-->
   <footer>
     <p>Copyright</p>
   </footer>
@@ -25,12 +27,14 @@
 
 <script>
 import loginUsers from "../views/LoginUsers.vue";
-import navbarCw from "../components/NavbarCw.vue"
+import navbarCw from "../components/NavbarCw.vue";
+/*mport myWallet from "../components/myWallet.vue"*/
 
 export default{
   components: {
     navbarCw,
     loginUsers,
+    /*myWallet*/
   },
 
   data() {
@@ -43,10 +47,6 @@ export default{
     showLogin(){
       this.loginVisible = !this.loginVisible;
     },
-
-    closeLogin(){
-      this.loginVisible = false;
-    }
   }
 }
 </script>

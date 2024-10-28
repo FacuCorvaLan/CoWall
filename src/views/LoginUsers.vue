@@ -72,7 +72,7 @@ export default {
 .containerLogin{
   display: flex;
   background-color: rgb(218, 218, 248);
-  padding: 100px 100px;
+  padding: 60px 60px;
   border-radius: 50px;
   border-style: solid;
   border-color: rgb(24, 174, 246);
