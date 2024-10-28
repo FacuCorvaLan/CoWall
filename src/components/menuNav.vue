@@ -3,9 +3,7 @@
         <div class="listDiv">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
-              <li class="stlCasilla">Mi cuenta</li>
-              <li class="stlCasilla">Movimientos</li>
-              <li class="stlCasilla">Comprar o vender</li>
+              <li class="stlCasilla">Cerrar Sesión</li>
             </ul>
         </div>
 </template>
@@ -30,12 +28,14 @@ export default{
 <style>
 .styleUser{
   color: white;
+  font-size: 18px;
 }
 
 .listDiv{
   display:flex;
   flex-direction: column;
   position: relative; 
+  margin-left: 10px;
 }
 
 .btnMenu{
@@ -72,8 +72,9 @@ export default{
   cursor: pointer;
   background-color: black;
   position: relative;
-  top: 0;
-  right: 60px;
+  top: 12px;
+  right: 70px;
+  
 }
 
 .stlCasilla:hover {
