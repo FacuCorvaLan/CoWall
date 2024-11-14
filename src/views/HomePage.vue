@@ -1,5 +1,6 @@
 <template>
   <navbarCw/>
+  <router-link to="/Navbar"></router-link>
   <body>
     <div class="containerPpal">
       <div>
@@ -7,7 +8,9 @@
         <p>Haz crecer tus inversiones hoy.</p>
         <div class="BtnSesion">
           <form>
-            <input @click="showLogin" type="button" class="btnLogin" value="Iniciar Sesión">
+            <router-link to="/login">
+              <input type="button" class="btnLogin" value="Iniciar Sesión">
+            </router-link>
           </form>
       </div>
       </div>
@@ -16,9 +19,9 @@
         <figcaption>Designed by Freepik.</figcaption>
       </figure>
     </div>
-    <loginUsers v-if="loginVisible" class="newLogin" @loginComplete="closeLogin"/>
-
-    <!-- SIRVE PARA PROBAR COSAS. SACAR FUERA DEL COMENTARIO ==> <myWallet/>-->
+    
+    <!-- SIRVE PARA PROBAR COSAS. SACAR FUERA DEL COMENTARIO ==> <myWallet/>
+    <loginUsers v-if="loginVisible" class="newLogin" @loginComplete="closeLogin"/>-->
   <footer>
     <p>Copyright</p>
   </footer>
@@ -26,28 +29,14 @@
 </template>
 
 <script>
-import loginUsers from "../views/LoginUsers.vue";
-import navbarCw from "../components/NavbarCw.vue";
-/*mport myWallet from "../components/myWallet.vue"*/
+import navbarCw from "../components/NavbarCw.vue"
 
 export default{
+  
   components: {
-    navbarCw,
-    loginUsers,
-    /*myWallet*/
+    navbarCw
   },
 
-  data() {
-    return {
-      loginVisible: false
-    }
-  },
-
-  methods: {
-    showLogin(){
-      this.loginVisible = !this.loginVisible;
-    },
-  }
 }
 </script>
 
