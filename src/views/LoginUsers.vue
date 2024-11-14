@@ -1,8 +1,8 @@
 <template>
-  <div v-if="isVisible" :class="{'bodyLogin':isVisible, 'noneStyle': !isVisible}">
-    <navbarCw/>
+  <div class="bodyLogin">
+    <NavbarCw/>
       <div class="containerLogin">
-        <form v-show="isVisible" class="formStyle">
+        <form class="formStyle">
           <h1>Iniciá sesión</h1>
           <section class="userName">
             <h4>Nombre de usuario</h4>
@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import navbarCw from "../components/NavbarCw.vue"
+import NavbarCw from "../components/NavbarCw.vue"
 
 export default {
 
   components: {
-    navbarCw
+    NavbarCw
   },
 
   data() {
@@ -35,7 +35,7 @@ export default {
       messageError: "",
       nameUser: "",
       passwordUser: "",
-      isVisible: true,
+      //isVisible: true,
     };
   },
 
@@ -47,14 +47,12 @@ export default {
           this.messageError = "Debe ingresar una contraseña.";
         } else {
           this.messageError = "";
-          this.isVisible = !this.isVisible;
-          this.$emit('loginComplete');
+          this.$router.push('/profile');
         }
     },
   }
 };
 </script>
-
 
 <style>
 .bodyLogin{
@@ -67,6 +65,7 @@ export default {
   font-family: "Inria Sans", sans-serif;
   font-weight: 300;
   font-style: normal;
+  margin-top: 150px;
 }
 
 .containerLogin{
