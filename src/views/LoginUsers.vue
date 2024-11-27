@@ -8,10 +8,6 @@
             <h4>Nombre de usuario</h4>
             <input class="inputName" type="text" v-model="nameUser" placeHolder="Ingresar nombre de usuario...">
           </section>
-          <section class="userPassword">
-            <h4>Contraseña</h4>
-            <input class="inputPass" type="text" v-model="passwordUser" placeHolder="Ingresar contraseña...">  
-          </section>
           <section class="btnAndMsjError">
             <input class="btnIngresar" type="button" value="Ingresar" @click="finishLogin"/>
             <p class="msjError">{{messageError}}</p>
@@ -22,7 +18,7 @@
 </template>
 
 <script>
-import NavbarCw from "../components/NavbarCw.vue"
+import NavbarCw from "../Components/NavbarCw.vue"
 
 export default {
 
@@ -35,7 +31,6 @@ export default {
       messageError: "",
       nameUser: "",
       passwordUser: "",
-      //isVisible: true,
     };
   },
 
@@ -43,10 +38,11 @@ export default {
     finishLogin() {
       if (!this.nameUser) {
         this.messageError = "Por favor, ingrese el nombre de usuario.";
-      } else if (!this.passwordUser) {
-          this.messageError = "Debe ingresar una contraseña.";
+      } else if (this.nameUser.length < 8) {
+          this.messageError = "El nombre de usuario debe tener por lo menos 8 caracteres.";
         } else {
           this.messageError = "";
+          this.$emit('emit-name-user', this.nameUser);
           this.$router.push('/profile');
         }
     },

@@ -1,6 +1,6 @@
 <template>
   <navbarCw/>
-  <router-link to="/Navbar"></router-link>
+  <!--<router-link to="/Navbar"></router-link>-->
   <body>
     <div class="containerPpal">
       <div>
@@ -20,8 +20,6 @@
       </figure>
     </div>
     
-    <!-- SIRVE PARA PROBAR COSAS. SACAR FUERA DEL COMENTARIO ==> <myWallet/>
-    <loginUsers v-if="loginVisible" class="newLogin" @loginComplete="closeLogin"/>-->
   <footer>
     <p>Copyright</p>
   </footer>
@@ -29,7 +27,7 @@
 </template>
 
 <script>
-import navbarCw from "../components/NavbarCw.vue"
+import navbarCw from "../Components/NavbarCw.vue"
 
 export default{
   

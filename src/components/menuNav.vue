@@ -1,8 +1,11 @@
 <template>
-  <div class="containerName"><p class="styleUser">{{nameUser}}</p></div>
+  <div class="containerName"><p class="styleUser" >{{events.nameUser}}</p></div>
         <div class="listDiv">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
+              <li class="stlCasilla">Mi perfil</li>
+              <li class="stlCasilla">Movimientos</li>
+              <li class="stlCasilla">Comprar/Vender</li>
               <li class="stlCasilla">Cerrar Sesión</li>
             </ul>
         </div>
@@ -12,7 +15,10 @@
 export default{
   data() {
     return{
-      nameUser:"Facu Corvalán",
+      events: {
+        id: 123,
+        nameUser: ""
+      },
       flagList: false
     }
   },
@@ -51,6 +57,7 @@ export default{
   margin: 10px 30px 10px 10px;
 }
 
+
 .imgBtn{
   width: 50px;
   height: 50px;
@@ -60,9 +67,8 @@ export default{
   padding: 0;
   margin: 0;
   position: absolute;
-  top: 60px; 
-  left: 0;
-  border-radius: 5px;
+  top: 48px; 
+  left: -22px;
 }
 
 .stlCasilla {
@@ -70,7 +76,7 @@ export default{
   padding: 10px 20px;
   color: white;
   cursor: pointer;
-  background-color: black;
+  background-color: blue;
   position: relative;
   top: 12px;
   right: 70px;
