@@ -8,10 +8,6 @@
             <h4>Nombre de usuario</h4>
             <input class="inputName" type="text" v-model="nameUser" placeHolder="Ingresar nombre de usuario...">
           </section>
-          <section class="userPassword">
-            <h4>Contraseña</h4>
-            <input class="inputPass" type="text" v-model="passwordUser" placeHolder="Ingresar contraseña...">  
-          </section>
           <section class="btnAndMsjError">
             <input class="btnIngresar" type="button" value="Ingresar" @click="finishLogin"/>
             <p class="msjError">{{messageError}}</p>
@@ -22,7 +18,7 @@
 </template>
 
 <script>
-import NavbarCw from "../components/NavbarCw.vue"
+import NavbarCw from "../Components/NavbarCw.vue"
 
 export default {
 
@@ -34,20 +30,20 @@ export default {
     return {
       messageError: "",
       nameUser: "",
-      passwordUser: "",
-      //isVisible: true,
     };
   },
+
 
   methods: {
     finishLogin() {
       if (!this.nameUser) {
         this.messageError = "Por favor, ingrese el nombre de usuario.";
-      } else if (!this.passwordUser) {
-          this.messageError = "Debe ingresar una contraseña.";
+      } else if (this.nameUser.length < 8) {
+          this.messageError = "El nombre de usuario debe tener al menos 8 caracteres.";
         } else {
           this.messageError = "";
-          this.$router.push('/profile');
+          this.$router.push({name:'Profile', params:{userName: this.nameUser}});
+          this.$store.dispatch( 'loadUserName', this.nameUser);
         }
     },
   }
@@ -71,7 +67,7 @@ export default {
 .containerLogin{
   display: flex;
   background-color: rgb(218, 218, 248);
-  padding: 60px 60px;
+  padding: 65px 40px 0 40px;
   border-radius: 50px;
   border-style: solid;
   border-color: rgb(24, 174, 246);
@@ -96,7 +92,7 @@ export default {
 
 .formStyle h4{
   font-weight: bolder;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 18px;
 }
 
@@ -123,7 +119,7 @@ export default {
   border-color: rgb(24, 174, 246);
   border-radius: 18px;
   border-style: solid;
-  margin-top: 15px;
+  margin-top: 35px;
   transition: background-color 0.5s; 
   box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.2);
 }
