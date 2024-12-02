@@ -1,5 +1,5 @@
 <template>
-  <div class="containerName"><p class="styleUser" >{{events.nameUser}}</p></div>
+  <div class="containerName"><p class="styleUser">{{userName}}</p></div>
         <div class="listDiv">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
@@ -15,11 +15,13 @@
 export default{
   data() {
     return{
-      events: {
-        id: 123,
-        nameUser: ""
-      },
-      flagList: false
+      flagList: false,
+    }
+  },
+
+  computed: {
+    userName () {
+      return this.$store.getters.userName;
     }
   },
 
@@ -27,7 +29,7 @@ export default{
     showList() {
       this.flagList = !this.flagList;
     }
-  }
+  },
 }
 </script>
 
