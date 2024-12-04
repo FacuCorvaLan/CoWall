@@ -5,22 +5,29 @@
       <h1>Mi Billetera</h1>
       <section class="userAmount">
         <div class="amount"><p>Monto Total: $145.000</p><div class="showAmount">a</div></div>
-        <input class="btnBuySell" type="button" value="Comprar/Vender"/>
+        <input class="btnBuySell" type="button" @click="this.$router.push('/transactions')" value="Comprar/Vender"/>
       </section>
     </section>
     <section class="secondColumn">
       <h2>Últimos movimientos</h2>
       <ul class="lastMov">
-        <li class="MovBox">asdasda</li>
-        <li class="MovBox">zxczxcz</li>
+        <li class="MovBox">{{  }} de {{  }}</li>
       </ul>
-      <div class="linkRecord"><p>Ver mi historial</p></div>
+      <div class="linkRecord" @click="openRecord"><p>Ver mi historial</p></div>
     </section>
   </div>
 </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  methods: {
+    openRecord(){
+      this.$router.push('/history');
+    }
+  }
+}
+</script>
 
 <style>
 .containerSec{

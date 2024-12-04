@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import menuNav from "../Components/menuNav.vue"
+import menuNav from '../Components/menuNav.vue'
 
 export default{
 
