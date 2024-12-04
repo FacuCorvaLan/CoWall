@@ -1,6 +1,5 @@
 <template>
-  <navbarCw/>
-  <!--<router-link to="/Navbar"></router-link>-->
+  <router-view/>
   <body>
     <div class="containerPpal">
       <div>
@@ -25,18 +24,6 @@
   </footer>
   </body>
 </template>
-
-<script>
-import navbarCw from "../Components/NavbarCw.vue"
-
-export default{
-  
-  components: {
-    navbarCw
-  },
-
-}
-</script>
 
 <style>
 body{

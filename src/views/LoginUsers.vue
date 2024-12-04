@@ -1,6 +1,6 @@
 <template>
   <div class="bodyLogin">
-    <NavbarCw/>
+    <router-view/>
       <div class="containerLogin">
         <form class="formStyle">
           <h1>Iniciá sesión</h1>
@@ -18,14 +18,10 @@
 </template>
 
 <script>
-import NavbarCw from "../Components/NavbarCw.vue"
 
 export default {
-
-  components: {
-    NavbarCw
-  },
-
+  namer: 'LoginUsers',
+  
   data() {
     return {
       messageError: "",
