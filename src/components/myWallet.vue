@@ -21,6 +21,23 @@
 
 <script>
 export default {
+
+  data() {
+    return {
+      events: {},
+    }
+  },
+
+  /*created() {
+    userServices.getEvents()
+    .then(response =>{
+      this.events = response.data;
+    })
+    .catch(error =>{
+      console.log(error);
+    })
+  },*/
+
   methods: {
     openRecord(){
       this.$router.push('/history');
@@ -96,7 +113,7 @@ flex-direction: column;
 }
 
 .btnBuySell:active {
-  background-color: rgb(24, 174, 246); 
+  background-color: rgb(24, 174, 246);
   color: white; 
 }
 
