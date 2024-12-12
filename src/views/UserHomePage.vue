@@ -10,7 +10,6 @@
 import NavbarCw from '../Components/NavbarCw.vue';
 import myWallet from "../Components/myWallet.vue";
 import boxCrypto from "../Components/boxCryptos.vue";
-//import eventServices from "../Services/EventService.js"
 
 export default {
   name: "UserHomePage",
@@ -19,22 +18,6 @@ export default {
     myWallet,
     boxCrypto
   },
-
-  data() {
-    return {
-      events: null,
-    }
-  },
-
-  /*created() {
-    eventServices.getEvents()
-    .then(response =>{
-      this.events = response.data;
-    })
-    .catch(error =>{
-      console.log(error);
-    })
-  },*/
 }
 </script>
 

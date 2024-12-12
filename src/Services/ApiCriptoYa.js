@@ -6,7 +6,7 @@ const apiQuote = axios.create({
 });
 
 export default {
-  getQuotes(paramsValue){
-    return apiQuote.get('/apiCrypto',{params: paramsValue});
+  getQuotes(typeCoin){
+    return apiQuote.get(`/binancep2p/${typeCoin}/ARS/1`);
   }
 }

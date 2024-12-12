@@ -1,19 +1,21 @@
 import {createStore} from 'vuex';
+import apiCrypto from '../Services/ApiCriptoYa'
+
 
 export default createStore({
   state:{
     userName: "",
-    DatesTransaction:[]
+    quoteCrypto:{},
   },
 
   getters:{
     userName (state){
       return state.userName;
     },
-    
-    DatesTransaction (state){
-      return state.DatesTransaction;
-    }
+
+    quoteCrypto (state){
+      return state.quoteCrypto;
+    },
   },
 
   mutations:{
@@ -21,9 +23,9 @@ export default createStore({
       state.userName = name;
     },
 
-    completeDates (state, dates){
-      state.DatesTransaction = dates;
-    }
+    completeQuoteCrypto(state, quote){
+      state.quoteCrypto = quote;
+    },
   },
   
   actions:{
@@ -31,10 +33,16 @@ export default createStore({
       commit('completeUserName', nameValue);
     },
 
-    loadDates ({commit}, datesValue){
-      commit('completeDates', datesValue);
-    }
+    async loadQuotes({ commit }, typeCoin) {
+      try {
+        const response = await apiCrypto.getQuotes(typeCoin);
+        console.log(response.data);
+        const apiData = response.data;
+        commit('completeQuoteCrypto', apiData);
+      } catch (error) {
+        console.error('Error al cargar la cotización:', error);
+      }
+    },
   }
-
 });
 

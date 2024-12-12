@@ -1,6 +1,6 @@
 <template>
   <div class="containerName"><p class="styleUser">{{userName}}</p></div>
-        <div class="listDiv">
+        <div class="listDiv" v-show="this.userName != ''">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
               <li class="stlCasilla">Mi perfil</li>
