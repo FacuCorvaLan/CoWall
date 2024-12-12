@@ -11,7 +11,7 @@
         <div class="dataForm">
           <div class="optionCoin">
             <p>Criptomoneda:</p>
-            <select id="crypto" class="cryptoOptions" v-model="transactionDates.crypto">
+            <select id="crypto" class="cryptoOptions" v-model="transactionDates.crypto_code">
               <option disabled>Seleccionar</option>
               <option value="BTC">BTC</option>
               <option value="ETH">ETH</option>
@@ -30,7 +30,7 @@
       <h3>Informe de transacción</h3>
         <div class="Dates">
           <p v-if="flagCompleteForm"><span>Operación: </span>{{ transactionDates.action}}</p>
-          <p v-if="flagCompleteForm"><span>Tipo de cripto: </span>{{ transactionDates.crypto }}</p>
+          <p v-if="flagCompleteForm"><span>Tipo de cripto: </span>{{ transactionDates.crypto_code }}</p>
           <p v-if="flagCompleteForm"><span>Monto a procesar: </span>{{ transactionDates.crypto_amount }}</p>
           <p v-if="flagCompleteForm"><span>Monto en $ARS: </span>{{ coinARSValue }}</p>
         </div>
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-  import NavbarCw from '../Components/NavbarCw.vue';
+  import NavbarCw from '../Components/NavbarCw.vue'
+  import apiUsers from '../Services/UsersServices'
 
   export default{
     name: "buySell",
@@ -56,12 +57,12 @@
       return {
         flagConfirmation: false,
         transactionDates:{
-          id: "",
+          user_id: "",
           action:"Compra",
-          crypto: "",
+          crypto_code: "",
           crypto_amount: null,
           money: null,
-          dateTime: null
+          datetime: ""
         },
         classAction1: "actionOption",
         classAction2: "actionOption2",
@@ -72,7 +73,7 @@
 
     computed: {
       flagCompleteForm() {
-        return (this.transactionDates.crypto && this.transactionDates.crypto_amount != null)
+        return (this.transactionDates.crypto_code && this.transactionDates.crypto_amount != null)
       },
     },
 
@@ -83,7 +84,7 @@
         }
       },
       'transactionDates.crypto_amount'(newVal) {
-        if (newVal != null && this.transactionDates.crypto) {
+        if (newVal && this.transactionDates.crypto_code != null) {
           this.updateCoinARS(); 
         }
       }
@@ -107,7 +108,7 @@
         try {
           const value = await this.quoteARS(); 
           console.log(value);
-          this.coinARSValue = value.totalBid; 
+          this.coinARSValue = (value.totalBid * this.transactionDates.crypto_amount); 
         } catch (error) {
           console.error("Error al obtener los datos de la API:", error);
           this.coinARSValue = null; 
@@ -116,7 +117,7 @@
 
       async quoteARS() {
         console.log(this.transactionDates);
-        await this.$store.dispatch('loadQuotes', {typeCoin:this.transactionDates.crypto, valueCoin: this.transactionDates.crypto_amount});
+        await this.$store.dispatch('loadQuotes', this.transactionDates.crypto_code);
         let value = this.$store.getters.quoteCrypto;
         return (value);
       },
@@ -129,26 +130,38 @@
         }
           this.loadDataMissing();
           console.log(this.transactionDates);
-          this.$store.dispatch('loadDates', this.transactionDates);
-          alert("Transacción Completa");
+          this.loadDates();
       },
 
-      resetDatas() {
+      resetData() {
         this.transactionDates = {
-          id: "",
-          action: "Compra",
-          crypto: "",
-          crypto_amount: 0,
-          money: 0,
-          dateTime: null,
+          user_id: "",
+          action:"Compra",
+          crypto_code: "",
+          crypto_amount: null,
+          money: null,
+          datetime: null
         };
       },
 
       loadDataMissing() {
-        this.transactionDates.id = this.$store.getters.userName;
+        this.transactionDates.user_id = this.$store.getters.userName;
         this.transactionDates.money = this.coinARSValue;
-        this.transactionDates.dateTime = new Date().toLocaleString();
+        this.transactionDates.datetime = new Date().toLocaleString();
       },
+
+      async loadDates() {
+      console.log("Datos enviados a la API:", this.transactionDates);
+      try {
+        const response = await apiUsers.postData(this.transactionDates);
+        console.log("Respuesta de la API:", response.data);
+        return response.data; 
+      } catch (error) {
+        console.error("Error al cargar los datos a la API:", error.message);
+        alert("Hubo un error al guardar los datos de transacción. Por favor, intenta de nuevo.");
+        return null;
+      }
+    }
     }
   }
 </script>

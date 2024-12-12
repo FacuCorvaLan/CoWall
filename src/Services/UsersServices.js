@@ -6,11 +6,11 @@ const apiClient = axios.create({
 });
 
 export default {
-  getEvents(){
-    return apiClient.get('/userDates');
+  getData(){
+    return apiClient.get('/transactions');
   },
 
-  postDates(data){
-    return apiClient.post('/userDates',data);
+  postData(data){
+    return apiClient.post('/transactions',data);
   }
 }
