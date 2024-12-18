@@ -1,6 +1,6 @@
 import {createStore} from 'vuex';
 import apiCrypto from '../Services/ApiCriptoYa'
-import apiUsers from '../Services/UsersServices'
+
 
 export default createStore({
   state:{
@@ -55,6 +55,7 @@ export default createStore({
         return null;
       }
     }
+
   }
 });
 

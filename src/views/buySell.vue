@@ -11,7 +11,10 @@
         <div class="dataForm">
           <div class="optionCoin">
             <p>Criptomoneda:</p>
+
             <select id="crypto" class="cryptoOptions" v-model="transactionData.crypto_code">
+
+
               <option disabled>Seleccionar</option>
               <option value="BTC">BTC</option>
               <option value="ETH">ETH</option>
@@ -29,9 +32,11 @@
     <div class="confirmation">
       <h3>Informe de transacción</h3>
         <div class="Dates">
+
           <p v-if="flagCompleteForm"><span>Operación: </span>{{ transactionData.action}}</p>
           <p v-if="flagCompleteForm"><span>Tipo de cripto: </span>{{ transactionData.crypto_code}}</p>
           <p v-if="flagCompleteForm"><span>Monto a procesar: </span>{{ transactionData.crypto_amount }}</p>
+
           <p v-if="flagCompleteForm"><span>Monto en $ARS: </span>{{ coinARSValue }}</p>
         </div>
         
@@ -43,7 +48,8 @@
 </template>
 
 <script>
-  import NavbarCw from '../Components/NavbarCw.vue';
+  import NavbarCw from '../Components/NavbarCw.vue'
+  import apiUsers from '../Services/UsersServices'
 
   export default{
     name: "buySell",
@@ -71,6 +77,7 @@
 
     computed: {
       flagCompleteForm() {
+
         return (this.transactionData.crypto_code != "" && this.transactionData.crypto_amount > 0)
       },
     },
@@ -84,6 +91,7 @@
       'transactionData.crypto_amount'(valueAmount) {
         if (valueAmount > 0 && this.transactionData.crypto_code != "") {
           this.updateCoinARS();
+
         }
       }
     },
@@ -106,6 +114,7 @@
           const value = await this.quoteARS(); 
           console.log("resultado: ",value);
           this.coinARSValue = value; 
+
         } catch (error) {
           console.error("Error al obtener los datos de la API:", error);
           this.coinARSValue = null; 
@@ -115,6 +124,8 @@
       async quoteARS() {
         //console.log(this.transactionData);
         await this.$store.dispatch('loadQuotes', this.transactionData.crypto_code);
+
+
         let value = this.$store.getters.quoteCrypto;
         console.log("Valores de CriptoYa: ", value.totalBid);
         let result = value.totalBid * this.transactionData.crypto_amount;
@@ -143,6 +154,8 @@
           crypto_amount: 0,
           money: 0,
           dateTime: "",
+
+      
         };
       },
 
@@ -150,7 +163,21 @@
         this.transactionData.user_id = this.$store.getters.userName;
         this.transactionData.money = this.coinARSValue;
         this.transactionData.dateTime = new Date().toLocaleString();
+
       },
+
+      async loadDates() {
+      console.log("Datos enviados a la API:", this.transactionDates);
+      try {
+        const response = await apiUsers.postData(this.transactionDates);
+        console.log("Respuesta de la API:", response.data);
+        return response.data; 
+      } catch (error) {
+        console.error("Error al cargar los datos a la API:", error.message);
+        alert("Hubo un error al guardar los datos de transacción. Por favor, intenta de nuevo.");
+        return null;
+      }
+    }
     }
   }
 </script>

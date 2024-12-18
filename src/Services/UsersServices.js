@@ -6,6 +6,7 @@ const apiClient = axios.create({
 });
 
 export default {
+
   getInfo(){
     return apiClient.get('/transactions');
   },
@@ -20,5 +21,6 @@ export default {
 
   deleteInfo(data){
     return apiClient.delete(`/transactions/${data}`);
+
   }
 }
