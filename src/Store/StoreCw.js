@@ -33,10 +33,9 @@ export default createStore({
       commit('completeUserName', nameValue);
     },
 
-    async loadQuotes({ commit }, {typeCoin, valueCoin}) {
-      console.log('Parametros recibidos en loadQuotes:', {typeCoin, valueCoin});
+    async loadQuotes({ commit }, typeCoin) {
       try {
-        const response = await apiCrypto.getQuotes(typeCoin, valueCoin);
+        const response = await apiCrypto.getQuotes(typeCoin);
         console.log(response.data);
         const apiData = response.data;
         commit('completeQuoteCrypto', apiData);
@@ -45,10 +44,9 @@ export default createStore({
       }
     },
 
-    async loadDates(datesValue) {
-      console.log("Datos enviados a la API:", datesValue);
+    async loadDataSet(datesValue) {
       try {
-        const response = await apiUsers.postDates(datesValue);
+        const response = await apiUsers.postInfo(datesValue);
         console.log("Respuesta de la API:", response.data);
         return response.data; 
       } catch (error) {
