@@ -11,7 +11,10 @@
         <div class="dataForm">
           <div class="optionCoin">
             <p>Criptomoneda:</p>
-            <select id="crypto" class="cryptoOptions" v-model="transactionDates.crypto_code">
+
+            <select id="crypto" class="cryptoOptions" v-model="transactionData.crypto_code">
+
+
               <option disabled>Seleccionar</option>
               <option value="BTC">BTC</option>
               <option value="ETH">ETH</option>
@@ -20,7 +23,7 @@
           </div>
           <div class="amountCoin">
             <p>Monto:</p>
-            <input type="number" id="amount" class="inputAmount" placeholder="Ingrese el monto.." v-model="transactionDates.crypto_amount"/>
+            <input type="number" id="amount" class="inputAmount" placeholder="Ingrese el monto.." v-model="transactionData.crypto_amount"/>
           </div>
         </div>
       </section>
@@ -29,9 +32,11 @@
     <div class="confirmation">
       <h3>Informe de transacción</h3>
         <div class="Dates">
-          <p v-if="flagCompleteForm"><span>Operación: </span>{{ transactionDates.action}}</p>
-          <p v-if="flagCompleteForm"><span>Tipo de cripto: </span>{{ transactionDates.crypto_code }}</p>
-          <p v-if="flagCompleteForm"><span>Monto a procesar: </span>{{ transactionDates.crypto_amount }}</p>
+
+          <p v-if="flagCompleteForm"><span>Operación: </span>{{ transactionData.action}}</p>
+          <p v-if="flagCompleteForm"><span>Tipo de cripto: </span>{{ transactionData.crypto_code}}</p>
+          <p v-if="flagCompleteForm"><span>Monto a procesar: </span>{{ transactionData.crypto_amount }}</p>
+
           <p v-if="flagCompleteForm"><span>Monto en $ARS: </span>{{ coinARSValue }}</p>
         </div>
         
@@ -48,7 +53,6 @@
 
   export default{
     name: "buySell",
-
     components: {
       NavbarCw
     },
@@ -56,13 +60,13 @@
     data() {
       return {
         flagConfirmation: false,
-        transactionDates:{
-          user_id: "",
+        transactionData:{
+          user_id:"",
           action:"Compra",
           crypto_code: "",
-          crypto_amount: null,
-          money: null,
-          datetime: ""
+          crypto_amount: 0,
+          money: 0,
+          dateTime: ""
         },
         classAction1: "actionOption",
         classAction2: "actionOption2",
@@ -73,19 +77,21 @@
 
     computed: {
       flagCompleteForm() {
-        return (this.transactionDates.crypto_code && this.transactionDates.crypto_amount != null)
+
+        return (this.transactionData.crypto_code != "" && this.transactionData.crypto_amount > 0)
       },
     },
 
     watch: {
-      'transactionDates.crypto'(newVal) {
-        if (newVal && this.transactionDates.crypto_amount != null) {
+      'transactionData.crypto'(valueCrypto) {
+        if (valueCrypto && this.transactionData.crypto_amount > 0) {
           this.updateCoinARS(); 
         }
       },
-      'transactionDates.crypto_amount'(newVal) {
-        if (newVal && this.transactionDates.crypto_code != null) {
-          this.updateCoinARS(); 
+      'transactionData.crypto_amount'(valueAmount) {
+        if (valueAmount > 0 && this.transactionData.crypto_code != "") {
+          this.updateCoinARS();
+
         }
       }
     },
@@ -95,20 +101,20 @@
         if(this.classAction1 === "actionOption"){
           this.classAction1 = "actionOption2";
           this.classAction2 = "actionOption";
-          this.transactionDates.action = "Venta"
+          this.transactionData.action = "Venta"
         }else{
           this.classAction1 = "actionOption";
           this.classAction2 = "actionOption2";
-          this.transactionDates.action = "Compra"
+          this.transactionData.action = "Compra"
         }
-        console.log(this.transactionDates.action);
       },
 
       async updateCoinARS() {
         try {
           const value = await this.quoteARS(); 
-          console.log(value);
-          this.coinARSValue = (value.totalBid * this.transactionDates.crypto_amount); 
+          console.log("resultado: ",value);
+          this.coinARSValue = value; 
+
         } catch (error) {
           console.error("Error al obtener los datos de la API:", error);
           this.coinARSValue = null; 
@@ -116,10 +122,15 @@
       },
 
       async quoteARS() {
-        console.log(this.transactionDates);
-        await this.$store.dispatch('loadQuotes', this.transactionDates.crypto_code);
+        //console.log(this.transactionData);
+        await this.$store.dispatch('loadQuotes', this.transactionData.crypto_code);
+
+
         let value = this.$store.getters.quoteCrypto;
-        return (value);
+        console.log("Valores de CriptoYa: ", value.totalBid);
+        let result = value.totalBid * this.transactionData.crypto_amount;
+        console.log("Resultado: ", result);
+        return result;
       },
 
       confirmOperation(boleanValue){
@@ -129,25 +140,30 @@
           return;
         }
           this.loadDataMissing();
-          console.log(this.transactionDates);
-          this.loadDates();
+          const transactionJSON = JSON.stringify(this.transactionData);
+          console.log( "DATOS EN JSON: ",transactionJSON);
+          this.$store.dispatch('loadDataSet', transactionJSON);
+          alert("Transacción Completa");
       },
 
       resetData() {
-        this.transactionDates = {
-          user_id: "",
-          action:"Compra",
+        this.transactionData = {
+          user_id:"",
+          action: "Compra",
           crypto_code: "",
-          crypto_amount: null,
-          money: null,
-          datetime: null
+          crypto_amount: 0,
+          money: 0,
+          dateTime: "",
+
+      
         };
       },
 
       loadDataMissing() {
-        this.transactionDates.user_id = this.$store.getters.userName;
-        this.transactionDates.money = this.coinARSValue;
-        this.transactionDates.datetime = new Date().toLocaleString();
+        this.transactionData.user_id = this.$store.getters.userName;
+        this.transactionData.money = this.coinARSValue;
+        this.transactionData.dateTime = new Date().toLocaleString();
+
       },
 
       async loadDates() {

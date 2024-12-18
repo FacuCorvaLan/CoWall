@@ -1,12 +1,12 @@
 <template>
   <div class="bodyLogin">
-    <router-view/>
+    <navbar/>
       <div class="containerLogin">
         <form class="formStyle">
           <h1>Iniciá sesión</h1>
           <section class="userName">
             <h4>Nombre de usuario</h4>
-            <input class="inputName" type="text" v-model="nameUser" placeHolder="Ingresar nombre de usuario...">
+            <input id="nameUser" name="nameUser" class="inputName" type="text" v-model="nameUser" placeHolder="Ingresar nombre de usuario...">
           </section>
           <section class="btnAndMsjError">
             <input class="btnIngresar" type="button" value="Ingresar" @click="finishLogin"/>
@@ -18,10 +18,14 @@
 </template>
 
 <script>
+import navbar from '../Components/NavbarCw.vue';
 
 export default {
-  namer: 'LoginUsers',
+  name: 'LoginUsers',
   
+  components: {
+    navbar,
+  },
   data() {
     return {
       messageError: "",
@@ -106,6 +110,12 @@ export default {
   box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.2);
 }
 
+.BtnAndMsjError{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
 .btnIngresar{
   font-weight: bolder;
   max-width: fit-content;
@@ -123,12 +133,6 @@ export default {
 .btnIngresar:active {
   background-color: rgb(24, 174, 246); 
   color: white; 
-}
-
-.BtnAndMsjError{
-display: flex;
-flex-direction: column;
-align-items: center;
 }
 
 .msjError{

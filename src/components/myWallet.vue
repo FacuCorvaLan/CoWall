@@ -5,7 +5,7 @@
       <h1>Mi Billetera</h1>
       <section class="userAmount">
         <div class="amount"><p>Monto Total: $145.000</p><div class="showAmount">a</div></div>
-        <input class="btnBuySell" type="button" @click="this.$router.push('/transactions')" value="Comprar/Vender"/>
+        <input class="btnBuySell" type="button" @click="this.$router.push('/tranding')" value="Comprar/Vender"/>
       </section>
     </section>
     <section class="secondColumn">
@@ -27,16 +27,6 @@ export default {
       events: {},
     }
   },
-
-  /*created() {
-    userServices.getEvents()
-    .then(response =>{
-      this.events = response.data;
-    })
-    .catch(error =>{
-      console.log(error);
-    })
-  },*/
 
   methods: {
     openRecord(){

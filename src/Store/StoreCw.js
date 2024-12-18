@@ -43,6 +43,19 @@ export default createStore({
         console.error('Error al cargar la cotización:', error);
       }
     },
+
+    async loadDataSet(datesValue) {
+      try {
+        const response = await apiUsers.postInfo(datesValue);
+        console.log("Respuesta de la API:", response.data);
+        return response.data; 
+      } catch (error) {
+        console.error("Error al cargar los datos a la API:", error.message);
+        alert("Hubo un error al guardar los datos de transacción. Por favor, intenta de nuevo.");
+        return null;
+      }
+    }
+
   }
 });
 
