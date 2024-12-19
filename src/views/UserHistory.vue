@@ -129,10 +129,10 @@ export default {
       }*/
     },
 
-    showEdit(valueID, boleanValue) {  
+    showEdit(valueId, boleanValue) {  
       this.flagEdit = boleanValue;
       if(this.flagEdit){
-        this.selectedItem = this.dataTransactions.find(item => item._id === valueID);
+        this.selectedItem = this.dataTransactions.find(item => item._id === valueId);
       }
     },
 
