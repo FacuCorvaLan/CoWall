@@ -1,26 +1,39 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://laboratorio3-5fc7.restdb.io/rest/',
-  headers: {'x-apikey':'64bdbc3386d8c5613ded91e7'},
-});
+  baseURL:'https://labor3-d60e.restdb.io/rest/',
+  headers: {'x-apikey': '64a2e9bc86d8c525a3ed8f63'}
+})
 
-export default {
-
-  getInfo(){
-    return apiClient.get('/transactions');
-  },
-
-  postInfo(data){
-    return apiClient.post('/transactions/', data);
-  },
-
-  editInfo(data, body){
-    return apiClient.patch(`/transactions/${data}`, body);
-  },
-
-  deleteInfo(data){
-    return apiClient.delete(`/transactions/${data}`);
-
+export const postInfo = async (data) => {
+  try {
+    await apiClient.post('/transactions', data);
+    alert("TRANSACCIÓN EXITOSA");
+  } catch (error) {
+    console.error("Hubo un error al realizar la llamada.", error);
+    alert("No se pudo finalizar la transacción.", error);
   }
+};
+
+export const getInfo = (userId) => {
+  return apiClient.get(`/transactions?q={"user_id":"${userId}"}`);
+};
+
+export const editInfo = async (idData, body) => {
+  try {
+    const response = await apiClient.patch(`/transactions/${idData}`, body);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error del servidor:", error.response.data);
+      console.error("Errores de validación:", error.response.data.list);
+    } else {
+      console.error("Error desconocido:", error.message);
+    }
+    throw error;
+  }
+};
+
+export const deleteInfo = (idData) => {
+  return apiClient.delete(`/transactions/${idData}`);
 }

@@ -1,189 +1,142 @@
 <template>
   <div class="containerTransaction">
-    <NavbarCw/>
+    <NavbarCw />
     <div class="buySellDiv">
       <section class="inputDates">
-        <div class="operations"> 
-          <p :class="classAction1">Comprar</p>
-          <button class="buttonImg" @click="changesClasses"></button>
-          <p :class="classAction2">Vender</p>
+        <div class="operations">
+          <p :class="isPurchase ? 'actionClass1' : 'actionClass2'">Comprar</p>
+          <button class="buttonImg" @click="typeTransaction"></button>
+          <p :class="!isPurchase ? 'actionClass1' : 'actionClass2'">Vender</p>
         </div>
         <div class="dataForm">
           <div class="optionCoin">
             <p>Criptomoneda:</p>
 
             <select id="crypto" class="cryptoOptions" v-model="transactionData.crypto_code">
-
-
-              <option disabled>Seleccionar</option>
-              <option value="BTC">BTC</option>
-              <option value="ETH">ETH</option>
-              <option value="USDT">USDT</option>
+              <option disabled value="">Seleccionar</option>
+              <option  value="BTC">BTC</option>
+              <option  value="ETH">ETH</option>
+              <option  value="USDT">USDT</option>
             </select>
           </div>
           <div class="amountCoin">
             <p>Monto:</p>
-            <input type="number" id="amount" class="inputAmount" placeholder="Ingrese el monto.." v-model="transactionData.crypto_amount"/>
+            <input type="number" id="amount" class="inputAmount" placeholder="Ingrese el monto..." v-model="transactionData.crypto_amount"/>
           </div>
         </div>
       </section>
     </div>
-
     <div class="confirmation">
       <h3>Informe de transacción</h3>
-        <div class="Dates">
+      <div class="Dates" >
+        <p><span>Operación: </span>{{ coinARSValue != null ? operation : "" }}</p>
+        <p><span>Tipo de cripto: </span>{{ coinARSValue != null ? transactionData.crypto_code : "" }}</p>
+        <p><span>Monto a procesar: </span>{{ coinARSValue != null ? transactionData.crypto_amount : "" }}</p>
+        <p><span>Monto en ARS: </span>{{ coinARSValue != null ? (formatARS(coinARSValue)) : "" }}</p>
+      </div>
+      <div class="btnsConfirm">
+        <input type="button" class="btnContinue" @click="confirmOperation(true)" value="Confirmar" />
+      </div>
 
-          <p v-if="flagCompleteForm"><span>Operación: </span>{{ transactionData.action}}</p>
-          <p v-if="flagCompleteForm"><span>Tipo de cripto: </span>{{ transactionData.crypto_code}}</p>
-          <p v-if="flagCompleteForm"><span>Monto a procesar: </span>{{ transactionData.crypto_amount }}</p>
-
-          <p v-if="flagCompleteForm"><span>Monto en $ARS: </span>{{ coinARSValue }}</p>
-        </div>
-        
-        <div class="btnsConfirm">
-          <input type="button" class="btnContinue" @click="confirmOperation(true)" value="Confirmar"/>
-        </div>
     </div>
   </div>
+
+  <WebFooter/>
 </template>
 
 <script>
-  import NavbarCw from '../Components/NavbarCw.vue'
-  import apiUsers from '../Services/UsersServices'
+import NavbarCw from "../Components/NavbarCw.vue";
+import { postInfo } from "../Services/UsersServices";
+import { formatARS } from "../Methods/FormatData";
+import WebFooter from '../Components/WebFooter.vue';
+import moment from "moment";
 
-  export default{
-    name: "buySell",
-    components: {
-      NavbarCw
+export default {
+  name: "buySell",
+  components: { 
+    NavbarCw,
+    WebFooter
+  },
+  data() {
+    return {
+      transactionData: {
+        user_id: "",
+        action: "purchase",
+        crypto_code: "",
+        crypto_amount: "",
+        money: "",
+        datetime: "",
+      },
+      isPurchase: true, 
+      coinARSValue: null,
+    };
+  },
+  computed: {
+    flagCompleteForm() {
+      return this.transactionData.crypto_code != "" && this.transactionData.crypto_amount > 0;
+
     },
-
-    data() {
-      return {
-        flagConfirmation: false,
-        transactionData:{
-          user_id:"",
-          action:"Compra",
-          crypto_code: "",
-          crypto_amount: 0,
-          money: 0,
-          dateTime: ""
-        },
-        classAction1: "actionOption",
-        classAction2: "actionOption2",
-        coinARSValue: null, 
+    operation() {
+      return this.isPurchase ? "Compra" : "Venta";
+    },
+  },
+  watch: {
+    "transactionData.crypto_code": "updateCoinARS",
+    "transactionData.crypto_amount": "updateCoinARS",
+  },
+  methods: {
+    formatARS,
+    typeTransaction() {
+      this.isPurchase = !this.isPurchase;
+      this.transactionData.action = this.isPurchase ? "purchase" : "sale";
+    },
+    async updateCoinARS() {
+      if (!this.flagCompleteForm) {
+        this.coinARSValue = null;
+        return;
       }
-      
-    },
-
-    computed: {
-      flagCompleteForm() {
-
-        return (this.transactionData.crypto_code != "" && this.transactionData.crypto_amount > 0)
-      },
-    },
-
-    watch: {
-      'transactionData.crypto'(valueCrypto) {
-        if (valueCrypto && this.transactionData.crypto_amount > 0) {
-          this.updateCoinARS(); 
-        }
-      },
-      'transactionData.crypto_amount'(valueAmount) {
-        if (valueAmount > 0 && this.transactionData.crypto_code != "") {
-          this.updateCoinARS();
-
-        }
-      }
-    },
-
-    methods: {
-      changesClasses(){
-        if(this.classAction1 === "actionOption"){
-          this.classAction1 = "actionOption2";
-          this.classAction2 = "actionOption";
-          this.transactionData.action = "Venta"
-        }else{
-          this.classAction1 = "actionOption";
-          this.classAction2 = "actionOption2";
-          this.transactionData.action = "Compra"
-        }
-      },
-
-      async updateCoinARS() {
-        try {
-          const value = await this.quoteARS(); 
-          console.log("resultado: ",value);
-          this.coinARSValue = value; 
-
-        } catch (error) {
-          console.error("Error al obtener los datos de la API:", error);
-          this.coinARSValue = null; 
-        }
-      },
-
-      async quoteARS() {
-        //console.log(this.transactionData);
-        await this.$store.dispatch('loadQuotes', this.transactionData.crypto_code);
-
-
-        let value = this.$store.getters.quoteCrypto;
-        console.log("Valores de CriptoYa: ", value.totalBid);
-        let result = value.totalBid * this.transactionData.crypto_amount;
-        console.log("Resultado: ", result);
-        return result;
-      },
-
-      confirmOperation(boleanValue){
-        this.flagConfirmation = boleanValue;
-        if(!this.flagConfirmation){
-          this.resetData();
-          return;
-        }
-          this.loadDataMissing();
-          const transactionJSON = JSON.stringify(this.transactionData);
-          console.log( "DATOS EN JSON: ",transactionJSON);
-          this.$store.dispatch('loadDataSet', transactionJSON);
-          alert("Transacción Completa");
-      },
-
-      resetData() {
-        this.transactionData = {
-          user_id:"",
-          action: "Compra",
-          crypto_code: "",
-          crypto_amount: 0,
-          money: 0,
-          dateTime: "",
-
-      
-        };
-      },
-
-      loadDataMissing() {
-        this.transactionData.user_id = this.$store.getters.userName;
-        this.transactionData.money = this.coinARSValue;
-        this.transactionData.dateTime = new Date().toLocaleString();
-
-      },
-
-      async loadDates() {
-      console.log("Datos enviados a la API:", this.transactionDates);
       try {
-        const response = await apiUsers.postData(this.transactionDates);
-        console.log("Respuesta de la API:", response.data);
-        return response.data; 
+        const value = await this.quoteARS();
+        this.coinARSValue = Number(value.toFixed(2));
       } catch (error) {
-        console.error("Error al cargar los datos a la API:", error.message);
-        alert("Hubo un error al guardar los datos de transacción. Por favor, intenta de nuevo.");
-        return null;
+        console.error("Error al obtener los datos de la API:", error);
       }
-    }
-    }
-  }
+    },
+    async quoteARS() {
+      await this.$store.dispatch("loadQuotes", this.transactionData.crypto_code);
+      const value = this.$store.getters.quoteCrypto;
+      return value.totalBid * this.transactionData.crypto_amount;
+    },
+    confirmOperation(isConfirmed) {
+      if (!isConfirmed) return this.resetData();
+      this.completeTransactionData();
+      try {
+        postInfo(this.transactionData);
+      } catch (error) {
+        alert("No se pudo guardar los datos de la transacción.");
+      }
+    },
+    resetData() {
+      this.transactionData = {
+        user_id: "",
+        action: "purchase",
+        crypto_code: "",
+        crypto_amount: "",
+        money: "",
+        datetime: "",
+      };
+    },
+    completeTransactionData() {
+      this.transactionData.user_id = this.$store.getters.userName;
+      this.transactionData.money = this.coinARSValue;
+      this.transactionData.datetime = moment().toISOString();
+    },
+  },
+};
 </script>
 
 <style scoped>
-    h3{
+h3{
       margin: 10px 0;
       text-decoration: underline;
       text-decoration-thickness: 2px;
@@ -217,11 +170,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: lighter;
     max-width: fit-content;
   }
 
-  .actionOption{
+  .actionClass1{
     background-color: blue;
     color: white;
     max-width: fit-content;
@@ -230,9 +182,10 @@
     border-style: solid;
     border-width: 2px;
     padding: 10px;
+    font-weight: bolder;
   }
 
-  .actionOption2{
+  .actionClass2{
     background-color: white;
     border-color: rgb(24, 174, 246);
     border-radius: 20px;
@@ -353,5 +306,4 @@
     -webkit-appearance: none;
     margin: 0;
   }
-
 </style>

@@ -5,7 +5,7 @@
         <img src="../assets/Images/logo-CoWall.png" class="imgLogo">
         <p class="NameWebsite">CoWall</p>
       </div>
-      <div class="containerMenu">
+      <div class="containerMenu" v-show="!flagLogOut">
         <menuNav/>
       </div>
     </div>
@@ -16,15 +16,18 @@
 import menuNav from '../Components/menuNav.vue'
 
 export default{
-
+  name: "NavbarCw",
   components: {
     menuNav,
+  },
+
+  computed: {
+    flagLogOut () {return this.$store.getters.closeUser}
   },
 
   data() {
     return{
       nameUser:"Facu Corvalán",
-      flagList: false
     }
   },
 
@@ -47,6 +50,7 @@ export default{
   width: 100%;
   margin-bottom: 50px;
   background-color: black;
+  z-index: 2; 
 }
 
 .containerHead{

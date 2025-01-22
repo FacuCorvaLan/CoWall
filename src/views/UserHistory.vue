@@ -6,7 +6,7 @@
           <thead>
             <tr>
               <th>Tipo de moneda</th>
-              <th>Monto Total</th>
+              <th>Monto de Transacción</th>
               <th>Monto en pesos</th>
               <th>Operación</th>
               <th>Fecha</th>
@@ -14,28 +14,18 @@
             </tr>
           </thead>
           <tbody>
-            <!--<tr v-for="(item, index) in dataTransactions" :key="index">
-              <td>{{item.crypto_code}}</td>
-              <td>{{item.crypto_amount}}</td>
-              <td>{{item.money}}</td>
-              <td>{{item.action}}</td>
-              <td>{{item.dateTime}}</td>
+            <tr v-for="(item, index) in dataTransactions" :key="index">
+              <td>{{ item.crypto_code }}</td>
+              <td>{{ item.crypto_amount }}</td>
+              <td>{{ formatARS(item.money) }}</td>
+              <td>{{ item.action === 'purchase' ? 'Compra' : item.action === 'sale' ? 'Venta' : 'N/A' }}</td>
+              <td>{{ formatDateTime(item.datetime)}}</td>
               <td>
-                <button @click="showInfo(item._id, true)">Mostrar</button>
-                <button @click="showEdit(item._id, true)">Editar</button>
-                <button @click="flagDelete = true">Borrar</button>
-              </td>
-            </tr>-->
-            <tr>
-              <td><p>BTC</p></td>
-              <td><p>0.005</p></td>
-              <td><p>618255.0683</p></td>
-              <td><p>Compra</p></td>
-              <td><p>18/12/2024</p></td>
-              <td>
-                <button @click="showInfo(/*item._id,*/ true)">Mostrar</button>
-                <button @click="flagEdit = true">Editar</button>
-                <button @click="flagDelete = true">Borrar</button>
+                <div class="divBtnActions">
+                  <button class="btnDetail" @click="flagShow = true ,showInfo(item._id)"/>
+                  <button class="btnEdit" @click="flagEdit = true ,showEdit(item._id)"/>
+                  <button class="btnDelete" @click="flagDelete = true ,showDelete(item._id)"/>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -45,35 +35,24 @@
     <div class="containerActions" v-show="flagShow || flagEdit || flagDelete">
       <div class="showItem" v-show="flagShow">
         <div class="infoDiv">
-          <p>Tipo de cripto: BTC</p>
-          <p>Monto Total: 0.005</p>
-          <p>Monto en ARS: 618255.0683</p>
-          <p>Operación: Compra</p>
-          <p>Fecha: XXX</p>
-          <!--<p>Tipo de : {{ selectedItem.crypto_code }}</p>
+          <p>Tipo de cripto : {{ selectedItem.crypto_code }}</p>
           <p>Monto Total: {{ selectedItem.crypto_amount  }}</p>
-          <p>Monto en ARS: {{ selectedItem.crypto_money  }}</p>
-          <p>Operación: {{ selectedItem.crypto_action  }}</p>
-          <p>Fecha: {{ selectedItem.crypto_dateTime  }}</p>-->
-
+          <p>Monto en ARS: {{ formatARS(selectedItem.money)  }}</p>
+          <p>Operación: {{ selectedItem.action === 'purchase' ? 'Compra' : selectedItem.action === 'sale' ? 'Venta' : 'N/A' }}</p>
+          <p>Fecha: {{ formatDateTime(selectedItem.datetime)  }}</p>
         </div>
         <button @click="flagShow = false">Cerrar</button>
       </div>
       
       <div class="editItem" v-show="flagEdit">
-        <div class="divEditInfo">  
-              <!--<p>Tipo de cripto: {{ selectedItem.crypto_code }}</p>
-              <p>Monto Total: {{ selectedItem.crypto_amount  }}</p>
-              <p>Monto en ARS: {{ selectedItem.crypto_money  }}</p>
-              <p>Operación: {{ selectedItem.crypto_action  }}</p>
-              <p>Fecha: {{ selectedItem.crypto_dateTime  }}</p>-->
-              <div class="divInputs"><p>Tipo de cripto: BTC</p><input type="text" id="infoTypeCripto" class="inputNewInfo" v-model="selectedItem.crypto_code"/></div>
-              <div class="divInputs"><p>Monto Total: 0.005</p><input type="text" id="infoAmount" class="inputNewInfo" v-model="selectedItem.crypto_amount"/></div>
-              <div class="divInputs"><p>Monto en ARS: 618255.0683</p><input type="text" id="infoMoney" class="inputNewInfo" v-model="selectedItem.money"/></div>
-              <div class="divInputs"><p>Operación: Compra</p><input type="text" id="infoAction" class="inputNewInfo" v-model="selectedItem.action"/></div>
-              <div class="divInputs"><p>Fecha: XXX</p><input type="text" id="infoDateTime" class="inputNewInfo" v-model="selectedItem.dateTime"/></div>
+        <div class="divEditInfo">            
+          <div class="divInputs"> <p>Tipo de cripto: {{ selectedItem.crypto_code }}</p><input type="text" id="infoTypeCripto" class="inputNewInfo" v-model="newData.crypto_code"/></div>
+          <div class="divInputs"><p>Monto Total: {{ selectedItem.crypto_amount  }}</p><input type="text" id="infoAmount" class="inputNewInfo" v-model="newData.crypto_amount"/></div>
+          <div class="divInputs"><p>Monto en ARS: {{ formatARS(selectedItem.money)  }}</p><input type="text" id="infoMoney" class="inputNewInfo" v-model="newData.money"/></div>
+          <div class="divInputs"><p>Operación: {{ selectedItem.crypto_action  }}</p><input type="text" id="infoAction" class="inputNewInfo" v-model="newData.action"/></div>
+          <div class="divInputs"><p>Fecha: {{ formatDateTime(selectedItem.datetime)  }}</p><input type="datetime-local" id="infoDateTime" class="inputNewInfo" v-model="newData.datetime"/></div>
         </div>
-        <div class="btnEdit">
+        <div class="btnNewEdit">
           <button @click=editData()>Editar</button>
           <button @click="flagEdit = false">Cancelar</button>
         </div>
@@ -82,39 +61,57 @@
       <div class="deleteItem" v-show="flagDelete">
         <h2>¿Está seguro que desea eliminar estos datos?</h2>
         <div class="infoDiv">
-          <p>Tipo de cripto: BTC</p>
-          <p>Monto Total: 0.005</p>
-          <p>Monto en ARS: 618255.0683</p>
-          <p>Operación: Compra</p>
-          <p>Fecha: XXX</p>
+          <p>Tipo de cripto : {{ selectedItem.crypto_code }}</p>
+          <p>Monto Total: {{ selectedItem.crypto_amount  }}</p>
+          <p>Monto en ARS: {{ formatARS(selectedItem.money)  }}</p>
+          <p>Operación: {{ selectedItem.action === 'purchase' ? 'Compra' : selectedItem.action === 'sale' ? 'Venta' : 'N/A' }}</p>
+          <p>Fecha: {{ formatDateTime(selectedItem.datetime)  }}</p>
         </div>
         <button @click="confirmDelete = true, deleteData()">Eliminar</button>
-        <button @click="flagDelete = false">Cancelar</button>
+        <button @click="flagDelete = false, confirmDelete = false, deleteData()">Cancelar</button>
       </div>
     </div>
   </div>
+  <WebFooter/> 
 </template>
 
 <script>
-import apiUsers from '../Services/UsersServices';
+import WebFooter from '../Components/WebFooter.vue';
+import {getInfo , editInfo, deleteInfo} from '../Services/UsersServices';
+import { formatDateTime, formatARS } from '../Methods/FormatData';
 export default {
   name: "UserHistory",
-
+  components: {
+    WebFooter
+  },
   data(){
     return {
       dataTransactions: [],
+      moneyValue: "",
       flagShow: false,
       flagEdit: false,
       flagDelete: false,
       confirmDelete: false,
-      selectedItem: {}
+      selectedItem: {},
+      newData:{
+        action: "",
+        crypto_code: "",
+        crypto_amount: "",
+        money: "",
+        datetime: "",
+      }
     }
   },
 
   async created() {
     try {
-      const response = await apiUsers.getInfo(); 
-      this.dataTransactions = response.data; 
+      const response = await getInfo(this.$store.getters.userName);
+      this.moneyValue = response.data.money;
+      this.dataTransactions = response.data.map(info =>{
+        return{
+          ...info,
+        }
+      }); 
     } catch (error) {
       console.error("Error al mostrar el historial.", error);
       alert("Error al cargar el historial.");
@@ -122,41 +119,54 @@ export default {
   },
 
   methods: {
-    showInfo(/*valueID,*/ boleanValue){ 
-      this.flagShow = boleanValue;
-      /*if(this.flagShow){
-        this.selectedItem = this.dataTransactions.find(item => item._id === valueID);
-      }*/
+    formatARS,
+    formatDateTime,
+
+    resetArray(){
+      return {action: "", crypto_code: "", crypto_amount: "", money: "", datetime: "",};
     },
 
-    showEdit(valueID, boleanValue) {  
-      this.flagEdit = boleanValue;
+    showInfo(valueId){ 
+      if(this.flagShow){
+        this.selectedItem = this.dataTransactions.find(item => item._id === valueId);
+      }
+    },
+
+    showEdit(valueId) { 
       if(this.flagEdit){
-        this.selectedItem = this.dataTransactions.find(item => item._id === valueID);
+        this.selectedItem = this.dataTransactions.find(item => item._id === valueId);
+      }
+    },
+
+    showDelete(valueId){
+      if(this.flagDelete){
+        this.selectedItem = this.dataTransactions.find(item => item._id === valueId)
       }
     },
 
     async editData(){
+      console.log(this.newData);
       try{
-        const newData = {
-          user_id: this.selectedItem.user_id,
-          action: this.selectedItem.action,
-          crypto_code: this.selectedItem.crypto_code,
-          crypto_amount: this.selectedItem.crypto_amount,
-          money: this.selectedItem.money,
-          dateTime: this.selectedItem.dateTime,
+        const updatedData = {
+          action: this.newData.action || this.selectedItem.action,
+          crypto_code: this.newData.crypto_code || this.selectedItem.crypto_code,
+          crypto_amount: this.newData.crypto_amount || this.selectedItem.crypto_amount,
+          money: this.newData.money || this.selectedItem.money,
+          datetime: this.newData.datetime ? new Date(this.newData.datetime) : this.selectedItem.datetime,
         }
 
-        await apiUsers.editTransaction(this.selectedItem._id, newData);
+        await editInfo(this.selectedItem._id, updatedData);
 
         const idAux = this.dataTransactions.findIndex(item => item._id === this.selectedItem._id);
 
         if(idAux != -1){
-          this.dataTransactions[idAux] ={...this.selectedItem};
+          this.dataTransactions[idAux] ={...this.selectedItem, ...updatedData};
         }else{
           alert("No se encontraron los datos buscados.");
         }
         this.flagEdit = false;
+        this.newData = this.resetArray();
+        console.log("DATOS DESPÚES DE EDITAR:", this.dataTransactions);
       }catch(error) {
         console.error("Error al editar los datos:", error);
         alert("No se pudo actualizar la la información.");
@@ -166,7 +176,7 @@ export default {
     async deleteData(){
       if(this.confirmDelete){
         try {
-          await apiUsers.deleteInfo(this.selectedItem._id);
+          await deleteInfo(this.selectedItem._id);
         
           const indexAux = this.dataTransactions.findIndex(item => item._id === this.selectedItem._id);
 
@@ -180,11 +190,11 @@ export default {
           console.error("Error al eliminar", error);
           alert("No se pudo realizar la operación.");
         }
+      }else{
+        this.selectedItem = {};
       }
-    }
-
-    
-  },
+    }, 
+  }
 }
 </script>
 
@@ -196,7 +206,7 @@ export default {
   font-style: normal;
   border-radius: 8px;
   background-color: white;
-  margin: 100px 50px;
+  margin: 50px;
 }
 
 table {
@@ -273,7 +283,7 @@ th, td {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 0 0 10px;
+  margin: 20px 0 0 10px;
 }
 
 .divInputs{
@@ -297,5 +307,57 @@ th, td {
 .deleteItem{
   font-family: "Inria Sans", sans-serif;
   font-style: normal;
+}
+
+.divBtnActions{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.btnDetail{
+  padding: 0;
+  margin: 0;
+  border-width: 1px;
+  border-color: rgb(0, 178, 32);
+  border-radius: 5px;
+  background-color: transparent;
+  background-image: url('../assets/Images/detail.png');
+  background-size: cover;
+  background-position: center;
+  width: 30px; 
+  height: 30px; 
+  cursor: pointer;
+}
+
+.btnEdit{
+  padding: 0;
+  margin: 0;
+  border-width: 1px;
+  border-color: rgba(255, 190, 0);
+  border-radius: 5px;
+  background-color: transparent;
+  background-image: url('../assets/Images/edit.png');
+  background-size: cover;
+  background-position: center;
+  width: 30px; 
+  height: 30px; 
+  cursor: pointer;
+}
+
+.btnDelete{
+  padding: 0;
+  margin: 0;
+  border-width: 1px;
+  border-color: rgb(252, 10, 79);
+  border-radius: 5px;
+  background-color: transparent;
+  background-image: url('../assets/Images/delete.png');
+  background-size: cover;
+  background-position: center;
+  width: 30px; 
+  height: 30px; 
+  cursor: pointer;
 }
 </style>

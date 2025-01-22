@@ -1,13 +1,42 @@
 <template>
   <div class="containerBox">
     <p>Bitcoin</p>
-    <p>Valor de compra: </p>
-    <p>Valor de venta: </p>
+    <p>Monto total: </p>
+    <p>Monto en ARS: </p>
 
   </div>
 </template>
 
-<script></script>
+<script>
+import { formatARS } from '../Methods/FormatData';
+import { getInfo } from '../Services/UsersServices';
+export default{
+  name: 'boxCryptos',
+  data(){
+    return{
+      dataUser: [],
+      valueARS: ""
+    }
+  },
+
+  async created() {
+    try {
+      const response = await getInfo(this.$store.getters.userName);
+      this.dataUser = response.data; 
+    } catch (error) {
+      console.error("Error al mostrar el historial.", error);
+      alert("Error al cargar el historial.");
+    }
+  },
+
+  methods:{
+    formatARS,
+
+    calculateValues(){
+    }
+  }
+}
+</script>
 
 <style>
 .containerBox {

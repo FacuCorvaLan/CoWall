@@ -6,7 +6,7 @@
               <li @click="this.$router.push({name:'Profile', params:{userName: this.nameRouter}})" class="stlCasilla">Mi perfil</li>
               <li @click="this.$router.push('/history')" class="stlCasilla">Movimientos</li>
               <li @click="this.$router.push('/tranding')" class="stlCasilla">Comprar/Vender</li>
-              <li @click="this.$router.push('/')" class="stlCasilla">Cerrar Sesión</li>
+              <li @click="closeUser(), this.$router.push('/');" class="stlCasilla">Cerrar Sesión</li>
             </ul>
         </div>
 </template>
@@ -21,15 +21,17 @@ export default{
   },
 
   computed: {
-    userName () {
-      return this.$store.getters.userName;
-    }
+    userName () {return this.$store.getters.userName}
   },
 
   methods: {
     showList() {
       this.nameRouter = this.userName;
       this.flagList = !this.flagList;
+    },
+
+    closeUser(){
+      this.$store.dispatch('confirmLogOut', true);
     }
   },
 }

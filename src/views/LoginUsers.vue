@@ -44,6 +44,7 @@ export default {
           this.messageError = "";
           this.$router.push({name:'Profile', params:{userName: this.nameUser}});
           this.$store.dispatch( 'loadUserName', this.nameUser);
+          this.$store.dispatch('confirmLogOut', false);
         }
     },
   }
@@ -117,9 +118,11 @@ align-items: center;
 }
 
 .btnIngresar{
-  font-weight: bolder;
   max-width: fit-content;
+  font-family: "Inria Sans", sans-serif;
+  font-style: normal;
   font-size: 16px;
+  font-weight: bold;
   height: 40px;
   background-color: transparent;
   border-color: rgb(24, 174, 246);

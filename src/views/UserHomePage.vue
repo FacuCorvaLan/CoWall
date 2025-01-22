@@ -1,22 +1,22 @@
 <template>
 <div class="containerProfile">
   <NavbarCw/>
-  <myWallet/>
-  <boxCrypto/>
+  <div class="containerWallet"><myWallet/></div>
+  <WebFooter/> 
 </div>
 </template>
 
 <script>
 import NavbarCw from '../Components/NavbarCw.vue';
-import myWallet from "../Components/myWallet.vue";
-import boxCrypto from "../Components/boxCryptos.vue";
+import myWallet from '../Components/myWallet.vue';
+import WebFooter from '../Components/WebFooter.vue';
 
 export default {
   name: "UserHomePage",
   components: {
     NavbarCw,
     myWallet,
-    boxCrypto
+    WebFooter
   },
 }
 </script>
@@ -25,8 +25,11 @@ export default {
   .containerProfile{
     display: flex;
     justify-content: space-around;
-    align-items: center;
     flex-direction: column;
-    padding: 100px 10px;
+  }
+  .containerWallet{
+    display: flex;
+    justify-content: center;
+    padding: 100px 10px 30px 10px;
   }
 </style>
