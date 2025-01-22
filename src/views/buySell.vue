@@ -11,6 +11,7 @@
         <div class="dataForm">
           <div class="optionCoin">
             <p>Criptomoneda:</p>
+
             <select id="crypto" class="cryptoOptions" v-model="transactionData.crypto_code">
               <option disabled value="">Seleccionar</option>
               <option  value="BTC">BTC</option>
@@ -36,6 +37,7 @@
       <div class="btnsConfirm">
         <input type="button" class="btnContinue" @click="confirmOperation(true)" value="Confirmar" />
       </div>
+
     </div>
   </div>
 
@@ -72,6 +74,7 @@ export default {
   computed: {
     flagCompleteForm() {
       return this.transactionData.crypto_code != "" && this.transactionData.crypto_amount > 0;
+
     },
     operation() {
       return this.isPurchase ? "Compra" : "Venta";

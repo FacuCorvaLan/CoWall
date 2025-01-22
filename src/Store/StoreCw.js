@@ -55,6 +55,7 @@ export default createStore({
         console.error('Error al cargar la cotización:', error);
       }
     }
+
   }
 });
 
