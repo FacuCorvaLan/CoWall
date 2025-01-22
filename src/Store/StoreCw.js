@@ -1,10 +1,11 @@
 import {createStore} from 'vuex';
 import apiCrypto from '../Services/ApiCriptoYa'
-import apiUsers from '../Services/UsersServices'
+
 
 export default createStore({
   state:{
     userName: "",
+    closeUser: "",
     quoteCrypto:{},
   },
 
@@ -16,6 +17,10 @@ export default createStore({
     quoteCrypto (state){
       return state.quoteCrypto;
     },
+
+    closeUser (state){
+      return state.closeUser;
+    }
   },
 
   mutations:{
@@ -26,6 +31,10 @@ export default createStore({
     completeQuoteCrypto(state, quote){
       state.quoteCrypto = quote;
     },
+
+    completeCloseUser(state, boleanValue){
+      state.closeUser = boleanValue;
+    }
   },
   
   actions:{
@@ -33,26 +42,17 @@ export default createStore({
       commit('completeUserName', nameValue);
     },
 
+    confirmLogOut ({commit}, boleanValue){
+      commit('completeCloseUser', boleanValue);
+    },
+
     async loadQuotes({ commit }, typeCoin) {
       try {
         const response = await apiCrypto.getQuotes(typeCoin);
-        console.log(response.data);
         const apiData = response.data;
         commit('completeQuoteCrypto', apiData);
       } catch (error) {
         console.error('Error al cargar la cotización:', error);
-      }
-    },
-
-    async loadDataSet(datesValue) {
-      try {
-        const response = await apiUsers.postInfo(datesValue);
-        console.log("Respuesta de la API:", response.data);
-        return response.data; 
-      } catch (error) {
-        console.error("Error al cargar los datos a la API:", error.message);
-        alert("Hubo un error al guardar los datos de transacción. Por favor, intenta de nuevo.");
-        return null;
       }
     }
   }

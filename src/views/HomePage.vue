@@ -19,24 +19,22 @@
       </figure>
     </div>
     
-  <footer>
-    <p>Copyright</p>
-  </footer>
+    <WebFooter/>
   </body>
 </template>
+
+<script>
+import WebFooter from '../Components/WebFooter.vue';
+export default{
+  components: {
+    WebFooter
+  }
+}
+</script>
 
 <style>
 body{
   margin: 0;
-}
-
-footer{
-  display: flex;
-  justify-content: center;
-  background-color: rgb(31, 31, 58);
-  color:white;
-  font-size: 30px;
-  padding: 70px;
 }
 
 .containerPpal{
