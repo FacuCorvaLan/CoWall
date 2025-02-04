@@ -6,37 +6,46 @@
 
 <script>
 import { Chart, registerables } from 'chart.js';
+import { amountCryptos } from '../Methods/cryptosAmount';
+
   export default{
     name: 'DoughnutGraphic',
     data() {
       return{
         flagChart: null,
+        userData: {}
       }
     },
 
     mounted(){
+      this.userData = amountCryptos(this.$store.getters.getHistoryUser);
       Chart.register(...registerables);
       const data ={
-        labels:["Bitcoin","Ethereum", "Tether USDT", "Avalanche", "DogeCoin", "Bitcoin Cash"],
+        labels:["Bitcoin","Ethereum", "Tether USDT", "DogeCoin","Ripple", "Cardano"],
         datasets:[
           {
             label: "Monto total",
-            data:[10, 12, 22, 20, 11, 25],
+            data:[this.userData.BTC.amount,
+                  this.userData.ETH.amount, 
+                  this.userData.USDT.amount, 
+                  this.userData.DOGE.amount, 
+                  this.userData.XRP.amount, 
+                  this.userData.ADA.amount],
             backgroundColor: [
               "rgba(247, 147, 26, 0.7)",
               "rgba(24, 174, 246, 0.7)",
               "rgba(17, 124, 92, 0.7)",
-              "rgba(247, 13, 13, 0.7)",
               "rgba(218, 207, 54, 0.7)",
-              "rgba(57, 197, 111, 0.7)"
+              "rgba(0, 0, 0, 0.719)",
+              "rgb(16, 16, 236)"
             ],
             borderColor: [
-              "rgba(247, 147, 26, 1)",
-              "rgba(24, 174, 246, 1)",
-              "rgba(17, 124, 92, 1)",
-              "rgba(247, 13, 13, 1)",
-              "rgba(218, 207, 54, 1)",
-              "rgba(57, 197, 111, 1)"
+              "rgb(247, 147, 26)",
+              "rgb(24, 174, 246)",
+              "rgb(17, 124, 92)",
+              "rgb(218, 207, 54)",
+              "rgb(0, 0, 0)",
+              "rgb(16, 16, 236)"
             ],
             borderWidth: 1.7,
           }
@@ -47,7 +56,7 @@ import { Chart, registerables } from 'chart.js';
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: true,
+            display: data.datasets[0].data.some(value => value > 0),
             position: "bottom",
             labels: { 
               font: {
@@ -72,6 +81,7 @@ import { Chart, registerables } from 'chart.js';
       },
 
       methods: {
+        amountCryptos,
         beforeUnmount() { 
           if (this.chartInstance) {
             this.chartInstance.destroy();

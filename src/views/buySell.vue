@@ -105,7 +105,7 @@ export default {
     async quoteARS() {
       await this.$store.dispatch("loadQuotes", this.transactionData.crypto_code);
       const value = this.$store.getters.quoteCrypto;
-      return value.totalBid * this.transactionData.crypto_amount;
+      return value.totalAsk * this.transactionData.crypto_amount;
     },
     confirmOperation(isConfirmed) {
       if (!isConfirmed) return this.resetData();

@@ -1,15 +1,19 @@
 <template>
-<div class="containerProfile">
+<div class="containerProfile" v-if="infoLoad">
   <NavbarCw/>
   <div class="containerWallet"><myWallet/></div>
   <WebFooter/> 
 </div>
+<div v-else class="loading-container">
+    <p>Cargando datos...</p>
+  </div>
 </template>
 
 <script>
 import NavbarCw from '../Components/NavbarCw.vue';
 import myWallet from '../Components/myWallet.vue';
 import WebFooter from '../Components/WebFooter.vue';
+
 
 export default {
   name: "UserHomePage",
@@ -18,6 +22,13 @@ export default {
     myWallet,
     WebFooter
   },
+
+  computed:{
+    infoLoad(){
+      return this.$store.getters.infoUploaded;
+    },
+  },
+
 }
 </script>
 

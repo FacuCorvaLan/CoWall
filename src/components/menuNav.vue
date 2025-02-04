@@ -3,7 +3,7 @@
         <div class="listDiv" v-show="this.userName != ''">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
-              <li @click="this.$router.push({name:'Profile', params:{userName: this.nameRouter}})" class="stlCasilla">Mi perfil</li>
+              <li @click="this.$router.push({name:'Profile', params:{userName: userName}})" class="stlCasilla">Mi perfil</li>
               <li @click="this.$router.push('/history')" class="stlCasilla">Movimientos</li>
               <li @click="this.$router.push('/tranding')" class="stlCasilla">Comprar/Vender</li>
               <li @click="closeUser(), this.$router.push('/');" class="stlCasilla">Cerrar Sesión</li>
@@ -21,12 +21,12 @@ export default{
   },
 
   computed: {
-    userName () {return this.$store.getters.userName}
+    userName() {return this.$store.state.userName}
   },
 
   methods: {
     showList() {
-      this.nameRouter = this.userName;
+      //this.nameRouter = this.userName;
       this.flagList = !this.flagList;
     },
 

@@ -77,7 +77,7 @@
 
 <script>
 import WebFooter from '../Components/WebFooter.vue';
-import {getInfo , editInfo, deleteInfo} from '../Services/UsersServices';
+import {editInfo, deleteInfo} from '../Services/UsersServices';
 import { formatDateTime, formatARS } from '../Methods/FormatData';
 export default {
   name: "UserHistory",
@@ -104,18 +104,18 @@ export default {
   },
 
   async created() {
-    try {
-      const response = await getInfo(this.$store.getters.userName);
-      this.moneyValue = response.data.money;
-      this.dataTransactions = response.data.map(info =>{
-        return{
-          ...info,
+      if(!this.$store.state.userName){
+        alert("No se puede cargar el historial sin el nombre de usuario.");
+        return;
+      }else{
+        const response = this.$store.state.historyUser;
+        if(response.data === ""){
+          alert("No tiene historial.");
+          return;
+        }else{
+          this.dataTransactions = this.$store.getters.getHistoryUser;
         }
-      }); 
-    } catch (error) {
-      console.error("Error al mostrar el historial.", error);
-      alert("Error al cargar el historial.");
-    }
+      }
   },
 
   methods: {
@@ -145,7 +145,6 @@ export default {
     },
 
     async editData(){
-      console.log(this.newData);
       try{
         const updatedData = {
           action: this.newData.action || this.selectedItem.action,

@@ -16,46 +16,46 @@
             <tr>
               <th>Nombre</th>
               <th>Símbolo</th>
-              <th>Precio (USD)</th>
-              <th>Cambio (24h)</th>
+              <th>Compra ($ARS)</th>
+              <th>Venta ($ARS)</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Bitcoin</td>
               <td>BTC</td>
-              <td>$42,345.67</td>
-              <td style="color: rgb(5, 252, 5);">+2.34%</td>
+              <td>{{ valuesCryptos.BTC ? formatARS(valuesCryptos.BTC.totalAsk) : '' }}</td>
+              <td>{{ valuesCryptos.BTC ? formatARS(valuesCryptos.BTC.totalBid) : '' }}</td>
             </tr>
             <tr>
               <td>Ethereum</td>
               <td>ETH</td>
-              <td>$2,932.45</td>
-              <td style="color: rgb(5, 252, 5);">+1.12%</td>
+              <td>{{ valuesCryptos.ETH ? formatARS(valuesCryptos.ETH.totalAsk) : '' }}</td>
+              <td>{{ valuesCryptos.ETH ? formatARS(valuesCryptos.ETH.totalBid) : '' }}</td>
             </tr>
             <tr>
               <td>Tether</td>
               <td>USDT</td>
-              <td>$1.00</td>
-              <td style="color: rgb(5, 252, 5);">+0.01%</td>
+              <td>{{ valuesCryptos.USDT ? formatARS(valuesCryptos.USDT.totalAsk) : '' }}</td>
+              <td>{{ valuesCryptos.USDT ? formatARS(valuesCryptos.USDT.totalBid) : '' }}</td>
             </tr>
             <tr>
               <td>DogeCoin</td>
               <td>DOGE</td>
-              <td>$0.23</td>
-              <td style="color: rgb(255, 98, 98);">-0.56%</td>
+              <td>{{ valuesCryptos.DOGE ? formatARS(valuesCryptos.DOGE.totalAsk) : '' }}</td>
+              <td>{{ valuesCryptos.DOGE ? formatARS(valuesCryptos.DOGE.totalBid) : '' }}</td>
             </tr>
             <tr>
-              <td>Solana</td>
-              <td>SOL</td>
-              <td>$123.45</td>
-              <td style="color: rgb(5, 252, 5);">+5.67%</td>
+              <td>Ripple</td>
+              <td>XRP</td>
+              <td>{{ valuesCryptos.XRP  ? formatARS(valuesCryptos.XRP.totalAsk) : '' }}</td>
+              <td>{{ valuesCryptos.XRP  ? formatARS(valuesCryptos.XRP.totalBid) : '' }}</td>
             </tr>
             <tr>
-              <td>Avalanche</td>
-              <td>AVAX</td>
-              <td>$89.34</td>
-              <td style="color: rgb(5, 252, 5);">+3.45%</td>
+              <td>Cardano</td>
+              <td>ADA</td>
+              <td>{{ valuesCryptos.ADA ? formatARS(valuesCryptos.ADA.totalAsk) : '' }}</td>
+              <td>{{ valuesCryptos.ADA ? formatARS(valuesCryptos.ADA.totalBid) : '' }}</td>
             </tr>
           </tbody>
         </table>
@@ -71,17 +71,22 @@
 
 <script>
 import chartGraphic from '../Components/doughnutGraphic.vue';
+import { formatARS } from '../Methods/FormatData';
+
 export default {
   components: {
     chartGraphic,
   },
   data() {
     return {
-      events: {},
+      userHistory: {},
+      valuesCryptos: this.$store.state.quoteCryptos,
     }
   },
 
+
   methods: {
+    formatARS,
     openRecord(){
       this.$router.push('/history');
     }
@@ -151,7 +156,7 @@ flex-direction: column;
   align-items: center;
   background-color: blue;
   color: white;
-  padding: 20px; 
+  padding: 20px 45px 20px 0; 
   border-radius: 25px;
 }
 
@@ -163,7 +168,8 @@ flex-direction: column;
 
 .tblCriptoPrices {
   display: flex;
-  width: 90%;
+  width: 100%;
+  margin-left: 45px;
   font-family: "Inria Sans", sans-serif;
   font-style: normal;
   border-radius: 8px;
@@ -219,6 +225,7 @@ th, td {
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
+  margin-right: -30px;
 }
 
 .linkRecord p {
