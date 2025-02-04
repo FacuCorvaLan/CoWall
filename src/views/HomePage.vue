@@ -25,10 +25,16 @@
 
 <script>
 import WebFooter from '../Components/WebFooter.vue';
+
 export default{
   components: {
     WebFooter
+  },
+
+  async created(){
+    await this.$store.dispatch("loadQuotes");
   }
+
 }
 </script>
 

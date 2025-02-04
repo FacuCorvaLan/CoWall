@@ -45,6 +45,7 @@ export default {
           this.$router.push({name:'Profile', params:{userName: this.nameUser}});
           this.$store.dispatch( 'loadUserName', this.nameUser);
           this.$store.dispatch('confirmLogOut', false);
+          this.$store.dispatch('loadHistory', this.nameUser);
         }
     },
   }
