@@ -29,6 +29,10 @@ export default {
     },
   },
 
+  created(){
+    this.$store.dispatch('loadHistory', this.$store.state.userName);
+  }
+
 }
 </script>
 

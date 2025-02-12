@@ -17,6 +17,9 @@
               <option  value="BTC">BTC</option>
               <option  value="ETH">ETH</option>
               <option  value="USDT">USDT</option>
+              <option  value="DOGE">DOGE</option>
+              <option  value="XRP">XRP</option>
+              <option  value="ADA">ADA</option>
             </select>
           </div>
           <div class="amountCoin">
@@ -89,32 +92,44 @@ export default {
     typeTransaction() {
       this.isPurchase = !this.isPurchase;
       this.transactionData.action = this.isPurchase ? "purchase" : "sale";
+      this.updateCoinARS();
     },
-    async updateCoinARS() {
+    updateCoinARS() {
       if (!this.flagCompleteForm) {
         this.coinARSValue = null;
         return;
       }
-      try {
-        const value = await this.quoteARS();
+      const value = this.quoteARS();
+      if(!value){
+        alert("No hay cotización para esa moneda.");
+      }else{
         this.coinARSValue = Number(value.toFixed(2));
-      } catch (error) {
-        console.error("Error al obtener los datos de la API:", error);
       }
     },
-    async quoteARS() {
-      await this.$store.dispatch("loadQuotes", this.transactionData.crypto_code);
-      const value = this.$store.getters.quoteCrypto;
-      return value.totalAsk * this.transactionData.crypto_amount;
+    quoteARS() {
+      const codeCrypto = this.transactionData.crypto_code;
+      const value = this.$store.state.quoteCryptos[codeCrypto];
+      if(this.transactionData.action === "purchase" && this.isPurchase){
+        return value.totalAsk * this.transactionData.crypto_amount;
+      }else{
+        return value.totalBid * this.transactionData.crypto_amount;
+      }
     },
     confirmOperation(isConfirmed) {
       if (!isConfirmed) return this.resetData();
       this.completeTransactionData();
       try {
         postInfo(this.transactionData);
+        this.$store.dispatch('loadHistory', this.$store.state.userName);
+        this.$store.dispatch('loadQuotes');
       } catch (error) {
         alert("No se pudo guardar los datos de la transacción.");
       }
+    },
+    completeTransactionData() {
+      this.transactionData.user_id = this.$store.state.userName;
+      this.transactionData.money = this.coinARSValue;
+      this.transactionData.datetime = moment().toISOString();
     },
     resetData() {
       this.transactionData = {
@@ -125,12 +140,7 @@ export default {
         money: "",
         datetime: "",
       };
-    },
-    completeTransactionData() {
-      this.transactionData.user_id = this.$store.getters.userName;
-      this.transactionData.money = this.coinARSValue;
-      this.transactionData.datetime = moment().toISOString();
-    },
+    }
   },
 };
 </script>
