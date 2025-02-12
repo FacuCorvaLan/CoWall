@@ -22,9 +22,9 @@
               <td>{{ formatDateTime(item.datetime)}}</td>
               <td>
                 <div class="divBtnActions">
-                  <button class="btnDetail" @click="flagShow = true ,showInfo(item._id)"/>
-                  <button class="btnEdit" @click="flagEdit = true ,showEdit(item._id)"/>
-                  <button class="btnDelete" @click="flagDelete = true ,showDelete(item._id)"/>
+                  <button class="btnDetail" @click="showInfo(item._id)"/>
+                  <button class="btnEdit" @click="showEdit(item._id)"/>
+                  <button class="btnDelete" @click="showDelete(item._id)"/>
                 </div>
               </td>
             </tr>
@@ -108,12 +108,11 @@ export default {
         alert("No se puede cargar el historial sin el nombre de usuario.");
         return;
       }else{
-        const response = this.$store.state.historyUser;
-        if(response.data === ""){
+        if(this.$store.state.historyUser === ""){
           alert("No tiene historial.");
           return;
         }else{
-          this.dataTransactions = this.$store.getters.getHistoryUser;
+          this.dataTransactions = this.$store.state.historyUser;
         }
       }
   },
@@ -127,31 +126,67 @@ export default {
     },
 
     showInfo(valueId){ 
-      if(this.flagShow){
         this.selectedItem = this.dataTransactions.find(item => item._id === valueId);
-      }
+        this.flagShow = true; 
     },
 
     showEdit(valueId) { 
-      if(this.flagEdit){
         this.selectedItem = this.dataTransactions.find(item => item._id === valueId);
-      }
+        this.flagEdit = true;
     },
 
     showDelete(valueId){
-      if(this.flagDelete){
         this.selectedItem = this.dataTransactions.find(item => item._id === valueId)
-      }
+        this.flagDelete = true;
     },
 
     async editData(){
       try{
         const updatedData = {
           action: this.newData.action || this.selectedItem.action,
-          crypto_code: this.newData.crypto_code || this.selectedItem.crypto_code,
+          crypto_code: this.newData.crypto_code.toUpperCase() || this.selectedItem.crypto_code.toUpperCase(),
           crypto_amount: this.newData.crypto_amount || this.selectedItem.crypto_amount,
           money: this.newData.money || this.selectedItem.money,
           datetime: this.newData.datetime ? new Date(this.newData.datetime) : this.selectedItem.datetime,
+        }
+
+        if (this.newData.crypto_code && this.newData.crypto_code !== this.selectedItem.crypto_code) {
+        let quote = this.$store.state.quoteCryptos[this.newData.crypto_code.toUpperCase()];
+        
+        if (!quote) {
+            alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
+            return;
+        }
+
+        updatedData.money = updatedData.crypto_amount * (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
+        updatedData.money = Number(updatedData.money.toFixed(2));
+        
+        } else if (this.newData.crypto_amount && this.newData.crypto_amount != this.selectedItem.crypto_amount) {
+            let quote = this.$store.state.quoteCryptos[updatedData.crypto_code?.toUpperCase()];
+
+            if (!quote) {
+                alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
+                return;
+            }
+
+            updatedData.money = updatedData.crypto_amount * (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
+            updatedData.money = Number(updatedData.money.toFixed(2));
+            
+        } else if (this.newData.money && this.newData.money != this.selectedItem.money) {
+            let quote = this.$store.state.quoteCryptos[updatedData.crypto_code?.toUpperCase()];
+
+            if (!quote) {
+                alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
+                return;
+            }
+
+            updatedData.crypto_amount = this.newData.money / (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
+            updatedData.crypto_amount = Number(updatedData.crypto_amount.toFixed(2));
+        } else if(this.newData.crypto_code && this.newData.crypto_code != this.selectedItem.crypto_code){
+          let quote = this.$store.state.quoteCryptos[this.newData.crypto_code.toUpperCase()];
+
+          updatedData.money = updatedData.crypto_amount * (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
+          updatedData.money = Number(updatedData.money.toFixed(2));
         }
 
         await editInfo(this.selectedItem._id, updatedData);
@@ -165,10 +200,10 @@ export default {
         }
         this.flagEdit = false;
         this.newData = this.resetArray();
-        console.log("DATOS DESPÚES DE EDITAR:", this.dataTransactions);
+        this.selectedItem = {};
       }catch(error) {
         console.error("Error al editar los datos:", error);
-        alert("No se pudo actualizar la la información.");
+        alert("No se pudo actualizar la información.");
       }
     },
 

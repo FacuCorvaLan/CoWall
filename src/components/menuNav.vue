@@ -1,6 +1,7 @@
 <template>
-  <div class="containerName"><p class="styleUser">{{userName}}</p></div>
-        <div class="listDiv" v-show="this.userName != ''">
+  <div class="containerMenu" v-show=" userName != ''">
+    <div class="containerName"><p class="styleUser">{{userName}}</p></div>
+        <div class="listDiv">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
               <li @click="this.$router.push({name:'Profile', params:{userName: userName}})" class="stlCasilla">Mi perfil</li>
@@ -9,6 +10,8 @@
               <li @click="closeUser(), this.$router.push('/');" class="stlCasilla">Cerrar Sesión</li>
             </ul>
         </div>
+  </div>
+  
 </template>
 
 <script>
@@ -16,28 +19,36 @@ export default{
   data() {
     return{
       flagList: false,
-      nameRouter: ""
     }
   },
 
   computed: {
-    userName() {return this.$store.state.userName}
+    userName() {
+      if(!this.$store.state.userName){
+        return "";
+      }else{
+        return this.$store.state.userName;
+      }
   },
+},
 
-  methods: {
+methods: {
     showList() {
-      //this.nameRouter = this.userName;
       this.flagList = !this.flagList;
     },
 
     closeUser(){
       this.$store.dispatch('confirmLogOut', true);
+      this.$store.dispatch('loadUserName', "");
     }
-  },
+  }
 }
 </script>
 
 <style>
+.containerMenu{
+  display: flex;
+}
 .styleUser{
   color: white;
   font-size: 18px;
