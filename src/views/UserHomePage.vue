@@ -71,10 +71,6 @@ export default {
       return this.$store.getters.infoUploaded;
     },
 
-    isNewUser() {
-      return this.$store.getters.isNewUser; 
-    },
-
     isLoading() {
       return this.$store.getters.isLoading;
     },
