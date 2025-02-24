@@ -7,6 +7,7 @@
 <script>
 import { Chart, registerables } from 'chart.js';
 import { amountCryptos } from '../Methods/cryptosAmount';
+import { formatARS } from '../Methods/FormatData';
 
   export default{
     name: 'DoughnutGraphic',
@@ -71,10 +72,24 @@ import { amountCryptos } from '../Methods/cryptosAmount';
             },      
           },
           tooltip: {
-          enabled: true,
+            enabled: true,
+            callbacks: {
+            label: (selectedItem) => {
+              const codeValues = ["BTC", "ETH", "USDT", "DOGE", "XRP", "ADA"];
+              const cryptoCode = codeValues[selectedItem.dataIndex]; 
+              const amount = selectedItem.raw; 
+              const quoteARS = this.userData[cryptoCode]?.moneyARS || 0; 
+              const moneyARS = quoteARS; 
+
+              return [
+                `Monto total: ${parseFloat(amount)} ${cryptoCode}`,
+                `Monto en ARS: ${formatARS(moneyARS.toFixed(2))}`,
+              ];
+            },
           },
-        },
-        cutout: "30%",
+        }
+      },
+      cutout: "30%",
       };
       const ctx = this.$refs.doughnutGraphic.getContext("2d");
       this.chartInstance = new Chart(ctx, {type: "doughnut", data: data, options: options});

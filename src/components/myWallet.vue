@@ -4,7 +4,6 @@
     <section class="firstColumn">
       <h1>Mi Billetera</h1>
       <section class="userAmount">
-        <div class="amount"><p>Monto Total: $145.000</p><div class="showAmount">a</div></div>
         <div class="graphicDiv"><chartGraphic/></div>
       </section>
     </section>
@@ -21,47 +20,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Bitcoin</td>
-              <td>BTC</td>
-              <td>{{ valuesCryptos.BTC ? formatARS(valuesCryptos.BTC.totalAsk) : '' }}</td>
-              <td>{{ valuesCryptos.BTC ? formatARS(valuesCryptos.BTC.totalBid) : '' }}</td>
-            </tr>
-            <tr>
-              <td>Ethereum</td>
-              <td>ETH</td>
-              <td>{{ valuesCryptos.ETH ? formatARS(valuesCryptos.ETH.totalAsk) : '' }}</td>
-              <td>{{ valuesCryptos.ETH ? formatARS(valuesCryptos.ETH.totalBid) : '' }}</td>
-            </tr>
-            <tr>
-              <td>Tether</td>
-              <td>USDT</td>
-              <td>{{ valuesCryptos.USDT ? formatARS(valuesCryptos.USDT.totalAsk) : '' }}</td>
-              <td>{{ valuesCryptos.USDT ? formatARS(valuesCryptos.USDT.totalBid) : '' }}</td>
-            </tr>
-            <tr>
-              <td>DogeCoin</td>
-              <td>DOGE</td>
-              <td>{{ valuesCryptos.DOGE ? formatARS(valuesCryptos.DOGE.totalAsk) : '' }}</td>
-              <td>{{ valuesCryptos.DOGE ? formatARS(valuesCryptos.DOGE.totalBid) : '' }}</td>
-            </tr>
-            <tr>
-              <td>Ripple</td>
-              <td>XRP</td>
-              <td>{{ valuesCryptos.XRP  ? formatARS(valuesCryptos.XRP.totalAsk) : '' }}</td>
-              <td>{{ valuesCryptos.XRP  ? formatARS(valuesCryptos.XRP.totalBid) : '' }}</td>
-            </tr>
-            <tr>
-              <td>Cardano</td>
-              <td>ADA</td>
-              <td>{{ valuesCryptos.ADA ? formatARS(valuesCryptos.ADA.totalAsk) : '' }}</td>
-              <td>{{ valuesCryptos.ADA ? formatARS(valuesCryptos.ADA.totalBid) : '' }}</td>
+            <tr v-for="(crypto, index) in infoCryptos" :key="index">
+              <td>{{ crypto.name }}</td>
+              <td>{{ crypto.code }}</td>
+              <td>{{ crypto.pricePurchase }}</td>
+              <td>{{ crypto.priceSale }}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="actionsBtn">
-        <input class="btnBuySell" type="button" @click="this.$router.push('/tranding')" value="Comprar/Vender"/>
+        <input class="btnBuySell" type="button" @click="$router.push('/tranding')" value="Comprar/Vender"/>
         <div class="linkRecord" @click="openRecord"><p>Ver mi historial</p></div>
       </div>
     </section>
@@ -77,13 +46,50 @@ export default {
   components: {
     chartGraphic,
   },
-  data() {
-    return {
-      userHistory: {},
-      valuesCryptos: this.$store.state.quoteCryptos,
-    }
+    
+  computed: {
+    infoCryptos() {
+      const cryptos = this.$store.state.quoteCryptos;
+      return {
+        BTC:{
+            name: "Bitcoin", 
+            code: "BTC", 
+            pricePurchase: formatARS(cryptos.BTC.totalAsk),
+            priceSale: formatARS(cryptos.BTC.totalBid)
+          },
+        ETH:{
+          name: "Ethereum", 
+          code: "ETH", 
+          pricePurchase: formatARS(cryptos.ETH.totalAsk),
+          priceSale: formatARS(cryptos.ETH.totalBid)
+        },
+        USDT:{
+          name: "Tether", 
+          code: "USDT", 
+          pricePurchase: formatARS(cryptos.USDT.totalAsk),
+          priceSale: formatARS(cryptos.USDT.totalBid)
+        },
+        DOGE:{
+          name: "DogeCoin", 
+          code: "DOGE", 
+          pricePurchase: formatARS(cryptos.DOGE.totalAsk),
+          priceSale: formatARS(cryptos.DOGE.totalBid)
+        },
+        XRP:{
+          name: "Ripple", 
+          code: "XRP", 
+          pricePurchase: formatARS(cryptos.XRP.totalAsk),
+          priceSale: formatARS(cryptos.XRP.totalBid)
+        },
+        ADA:{
+          name: "Cardano", 
+          code: "ADA", 
+          pricePurchase: formatARS(cryptos.ADA.totalAsk),
+          priceSale: formatARS(cryptos.ADA.totalBid)
+        }
+      }
+    },
   },
-
 
   methods: {
     formatARS,
@@ -125,7 +131,7 @@ flex-direction: column;
 .firstColumn h1{
   font-size: 45px;
   margin-top: 0;
-  margin-bottom: 1px;
+  margin-bottom: 10px;
 }
 
 .firstColumn p{
@@ -178,19 +184,25 @@ flex-direction: column;
 table {
   width: 100%;
   border-collapse: collapse;
+  border: none;
   text-align: center;
 }
 
 thead {
-  background-color: blue;
   color: white;
+  border: 1px solid rgb(24, 174, 246);
+}
+tbody{
+  border: 1px solid rgb(24, 174, 246);
 }
 
 th, td {
   padding: 12px 15px;
-  border: 1px solid rgb(24, 174, 246);
 }
 
+tbody tr:hover {
+  background-color: rgba(28, 28, 80, 0.2);
+}
 .actionsBtn{
   display: flex;
   align-items: center;

@@ -4,10 +4,10 @@
         <div class="listDiv">
           <button class="btnMenu" @click="showList"><img src="../assets/Images/logoMenu.png" class="imgBtn"></button>
             <ul v-if="flagList" class="styleList">
-              <li @click="this.$router.push({name:'Profile', params:{userName: userName}})" class="stlCasilla">Mi perfil</li>
+              <li @click="callQuoteCryptos()" class="stlCasilla">Mi perfil</li>
               <li @click="this.$router.push('/history')" class="stlCasilla">Movimientos</li>
               <li @click="this.$router.push('/tranding')" class="stlCasilla">Comprar/Vender</li>
-              <li @click="closeUser(), this.$router.push('/');" class="stlCasilla">Cerrar Sesión</li>
+              <li @click="closeUser()" class="stlCasilla">Cerrar Sesión</li>
             </ul>
         </div>
   </div>
@@ -37,9 +37,16 @@ methods: {
       this.flagList = !this.flagList;
     },
 
+    callQuoteCryptos(){
+      this.$store.dispatch('loadQuotes');
+      this.$store.dispatch('loadHistory', this.$store.state.userName);
+      this.$router.push({name:'Profile', params:{userName: this.userName}});
+    },
+
     closeUser(){
+      this.$store.dispatch('resetStates');
       this.$store.dispatch('confirmLogOut', true);
-      this.$store.dispatch('loadUserName', "");
+      this.$router.push('/');
     }
   }
 }

@@ -18,7 +18,7 @@
               <td>{{ item.crypto_code }}</td>
               <td>{{ item.crypto_amount }}</td>
               <td>{{ formatARS(item.money) }}</td>
-              <td>{{ item.action === 'purchase' ? 'Compra' : item.action === 'sale' ? 'Venta' : 'N/A' }}</td>
+              <td>{{ item.action === 'purchase' ? 'Compra' : 'Venta' }}</td>
               <td>{{ formatDateTime(item.datetime)}}</td>
               <td>
                 <div class="divBtnActions">
@@ -143,50 +143,39 @@ export default {
     async editData(){
       try{
         const updatedData = {
-          action: this.newData.action || this.selectedItem.action,
-          crypto_code: this.newData.crypto_code.toUpperCase() || this.selectedItem.crypto_code.toUpperCase(),
-          crypto_amount: this.newData.crypto_amount || this.selectedItem.crypto_amount,
-          money: this.newData.money || this.selectedItem.money,
+          action: this.newData.action ? this.newData.action.toLowerCase() === "compra" ? "purchase" : "sale" : this.selectedItem.action,
+          crypto_code: this.newData.crypto_code ? this.newData.crypto_code.toUpperCase() : this.selectedItem.crypto_code.toUpperCase(),
+          crypto_amount: this.newData.crypto_amount ? parseFloat(this.newData.crypto_amount) : this.selectedItem.crypto_amount,
+          money: this.newData.money ? parseFloat(this.newData.money) : this.selectedItem.money,
           datetime: this.newData.datetime ? new Date(this.newData.datetime) : this.selectedItem.datetime,
         }
 
-        if (this.newData.crypto_code && this.newData.crypto_code !== this.selectedItem.crypto_code) {
-        let quote = this.$store.state.quoteCryptos[this.newData.crypto_code.toUpperCase()];
-        
-        if (!quote) {
+        const calculations = (quote) => {
+          if(!quote){
             alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
-            return;
-        }
-
-        updatedData.money = updatedData.crypto_amount * (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
-        updatedData.money = Number(updatedData.money.toFixed(2));
-        
-        } else if (this.newData.crypto_amount && this.newData.crypto_amount != this.selectedItem.crypto_amount) {
-            let quote = this.$store.state.quoteCryptos[updatedData.crypto_code?.toUpperCase()];
-
-            if (!quote) {
-                alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
-                return;
-            }
-
+          }else{
             updatedData.money = updatedData.crypto_amount * (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
             updatedData.money = Number(updatedData.money.toFixed(2));
-            
+          }
+        }
+
+        if (this.newData.crypto_code && this.newData.crypto_code !== this.selectedItem.crypto_code) {
+          const quote = this.$store.state.quoteCryptos[this.newData.crypto_code.toUpperCase()];
+          calculations(quote);
+        } else if (this.newData.crypto_amount && this.newData.crypto_amount != this.selectedItem.crypto_amount) {
+          const quote = this.$store.state.quoteCryptos[updatedData.crypto_code];
+          calculations(quote);
         } else if (this.newData.money && this.newData.money != this.selectedItem.money) {
-            let quote = this.$store.state.quoteCryptos[updatedData.crypto_code?.toUpperCase()];
-
-            if (!quote) {
-                alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
-                return;
-            }
-
-            updatedData.crypto_amount = this.newData.money / (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
-            updatedData.crypto_amount = Number(updatedData.crypto_amount.toFixed(2));
-        } else if(this.newData.crypto_code && this.newData.crypto_code != this.selectedItem.crypto_code){
-          let quote = this.$store.state.quoteCryptos[this.newData.crypto_code.toUpperCase()];
-
-          updatedData.money = updatedData.crypto_amount * (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
-          updatedData.money = Number(updatedData.money.toFixed(2));
+          const quote = this.$store.state.quoteCryptos[updatedData.crypto_code];
+          if (!quote) {
+            alert("Error: No se encontró la cotización para la criptomoneda seleccionada.");
+            return;
+          }
+          updatedData.crypto_amount = this.newData.money / (updatedData.action === "purchase" ? quote.totalAsk : quote.totalBid);
+          updatedData.crypto_amount = Number(updatedData.crypto_amount.toFixed(2));
+        } else if (this.newData.action && this.newData.action != this.selectedItem.action) {
+          const quote = this.$store.state.quoteCryptos[updatedData.crypto_code];
+          calculations(quote);
         }
 
         await editInfo(this.selectedItem._id, updatedData);
@@ -233,30 +222,42 @@ export default {
 </script>
 
 <style scoped>
+.containerPpal {
+  display: flex;
+  flex-direction: column;
+}
+
 .tableContainer {
+  flex: 1;
   display: flex;
   width: 90%;
   font-family: "Inria Sans", sans-serif;
   font-style: normal;
   border-radius: 8px;
   background-color: white;
-  margin: 50px;
+  margin: 70px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid rgb(24, 174, 246);
   text-align: center;
 }
 
 thead {
+  border: 2px solid rgb(24, 174, 246);
   background-color: blue;
   color: white;
 }
 
 th, td {
   padding: 12px 15px;
-  border: 1px solid rgb(24, 174, 246);
+  border: none; 
+}
+
+tbody tr:hover {
+  background-color: rgba(96, 96, 233, 0.2);
 }
 
 .containerActions {

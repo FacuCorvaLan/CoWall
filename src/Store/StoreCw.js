@@ -8,7 +8,9 @@ export default createStore({
     userName: "",
     closeUser: "",
     quoteCryptos:{},
-    historyUser: {}
+    historyUser: {},
+    loadingData: false,
+    TransactionState: ""
   },
 
   getters:{
@@ -16,8 +18,16 @@ export default createStore({
 
     infoUploaded(state){
       return (state.historyUser && Object.keys(state.historyUser).length > 0 && 
-      state.quoteCryptos && Object.keys(state.quoteCryptos).length > 0)
-    }
+      state.quoteCryptos && Object.keys(state.quoteCryptos).length > 0);
+    },
+
+    isNewUser(state) {
+      return state.historyUser && Object.keys(state.historyUser).length === 0;
+    },
+
+    isLoading(state) {
+      return state.loadingData; 
+    },
   },
 
   mutations:{
@@ -35,6 +45,14 @@ export default createStore({
 
     completeHistoryUser(state, valueHistory){
       state.historyUser = valueHistory;
+    },
+
+    completeLoad(state, boleanLoad){
+      state.loadingData = boleanLoad;
+    },
+
+    completeConfirmTransaction(state, boleanValue){
+      state.transactionState = boleanValue;
     }
   },
   
@@ -66,10 +84,10 @@ export default createStore({
         XRP: xrp.data != "" ? xrp.data : null, 
         ADA: ada.data != "" ? ada.data : null,
         }
-
         commit('completeQuoteCrypto', quotesCryptos);
       } catch (error) {
         console.error('Error al cargar la cotización:', error);
+        commit('completeQuoteCrypto', {});
       }
     },
 
@@ -79,18 +97,32 @@ export default createStore({
           alert("No se puede acceder al historial sin el nombre de usuario.");
           return;
         }
+
+        commit('completeLoad', true);
         const response = await historyData(valueName);
+        console.log("Historial del usuario: ",response.data);
+
         if (response.data && response.data.length > 0) {
           commit('completeHistoryUser', response.data);
         } else {
-          console.error("No tiene historial este usuario.");
           commit('completeHistoryUser', []); 
         }
       }catch (error){
         console.error("Error al cargar el historial:", error);
+      }finally {
+        commit('completeLoad', false); 
       }
-    }
+    },
 
+    resetStates({commit}){     
+      commit('completeUserName', "");
+      commit('completeQuoteCrypto', {});
+      commit('completeHistoryUser', {});
+    },
+
+    confirmTransaction({commit}, boleanValue){
+      commit('completeConfirmTransaction', boleanValue);
+    }
   }
 });
 

@@ -19,5 +19,6 @@ export default {
     font-size: 30px;
     padding: 50px;
     max-height: fit-content;
+    margin-top: 200px;
   }
 </style>

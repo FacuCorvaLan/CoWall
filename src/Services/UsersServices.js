@@ -5,13 +5,13 @@ const apiClient = axios.create({
   headers: {'x-apikey': '64a2e9bc86d8c525a3ed8f63'}
 })
 
-export const postInfo = async (data) => {
+export const postInfo = async (data, store) => {
   try {
     await apiClient.post('/transactions', data);
-    alert("TRANSACCIÓN EXITOSA");
+    store.dispatch('confirmTransaction', true);
   } catch (error) {
     console.error("Hubo un error al realizar la llamada.", error);
-    alert("No se pudo finalizar la transacción.", error);
+    store.dispatch('confirmTransaction', true);
   }
 };
 
