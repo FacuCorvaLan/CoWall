@@ -21,10 +21,6 @@ export default createStore({
       state.quoteCryptos && Object.keys(state.quoteCryptos).length > 0);
     },
 
-    isNewUser(state) {
-      return state.historyUser && Object.keys(state.historyUser).length === 0;
-    },
-
     isLoading(state) {
       return state.loadingData; 
     },
