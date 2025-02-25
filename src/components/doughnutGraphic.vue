@@ -13,7 +13,6 @@ import { formatARS } from '../Methods/FormatData';
     name: 'DoughnutGraphic',
     data() {
       return{
-        flagChart: null,
         userData: {}
       }
     },
