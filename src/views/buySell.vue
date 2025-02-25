@@ -31,7 +31,7 @@
     </div>
     <div class="confirmation">
       <h3>Informe de transacción</h3>
-      <div class="Dates" >
+      <div class="Dates">
         <p><span>Operación: </span>{{ coinARSValue != null ? operation : "" }}</p>
         <p><span>Tipo de cripto: </span>{{ coinARSValue != null ? transactionData.crypto_code : "" }}</p>
         <p><span>Monto a procesar: </span>{{ coinARSValue != null ? transactionData.crypto_amount : "" }}</p>

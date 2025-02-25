@@ -78,7 +78,7 @@ export default {
     infoCryptos() {
       const cryptos = this.$store.state.quoteCryptos;
 
-      if (!cryptos || Object.keys(cryptos).length === 0) {
+      if (!cryptos || Object.keys(cryptos).length === 0 || !Object.values(cryptos).some(crypto => crypto?.totalAsk && crypto?.totalBid)) {
         return {};
       }else{
         return {
