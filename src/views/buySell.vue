@@ -43,10 +43,10 @@
     </div>
     <div class="divFinish" v-show="this.flagWindow">
       <div class="nextAction">
-      <h1>{{ message }}</h1>
+      <h1>{{ messageTransaction }}</h1>
       <div class="actionsBtn">
         <input type="button" class="btnContinue" @click="this.flagWindow = false" value="Seguir comprando..."/>
-        <div class="linkRecord" @click="openRecord"><p>Ver mi historial</p></div>
+        <div class="linkRecord" @click="openPerfil"><p>Ir a mi perfil.</p></div>
       </div>
     </div>
     </div>
@@ -71,7 +71,7 @@ export default {
   },
   data() {
     return {
-      message: "",
+      boleanMessage: false,
       transactionData: {
         user_id: "",
         action: "purchase",
@@ -93,6 +93,14 @@ export default {
     operation() {
       return this.isPurchase ? "Compra" : "Venta";
     },
+
+    messageTransaction(){
+      if(this.boleanMessage){
+        return "Transacción Exitosa.";
+      }else{
+        return "Hubo un error en la transacción.";
+      }
+    }
   },
   watch: {
     "transactionData.crypto_code": "updateCoinARS",
@@ -139,10 +147,12 @@ export default {
         this.$store.dispatch('loadQuotes');
         if(this.$store.state.transactionState){this.message = "Transacción Exitosa."}
         this.flagWindow = true;
+        this.boleanMessage = true;
       } catch (error) {
         console.Error("No se pudo guardar los datos de la transacción.");
         this.message = "No se pudo guardar los datos de transacción";
         this.flagWindow = true;
+        this.boleanMessage = false;
       }
     },
 
@@ -163,8 +173,9 @@ export default {
       };
     },
 
-    openRecord(){
-      this.$router.push('/history');
+    openPerfil(){
+      const nameUser = this.$store.state.userName;
+      this.$router.push({name:'Profile', params:{userName: nameUser}});
       this.flagWindow = false;
     }
   },

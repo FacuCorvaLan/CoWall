@@ -10,7 +10,7 @@ export default createStore({
     quoteCryptos:{},
     historyUser: {},
     loadingData: false,
-    TransactionState: ""
+    transactionState: ""
   },
 
   getters:{

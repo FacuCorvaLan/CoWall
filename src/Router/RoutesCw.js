@@ -13,14 +13,12 @@ const routes = [
 
   { path: '/login', name:'Login', component: loginUsers},
 
-  { path: '/profile/:userName', name:'Profile', component: userHome, 
-    children: [ {path:'', component: navbar}]},
+  { path: '/profile/:userName', name:'Profile', component: userHome},
 
   { path: '/history', name:'History', component: userHistory,
     children: [{path:'', component: navbar}]},
   
-    { path: '/tranding', name:'Tranding', component: transactions,
-      children: [ {path:'', component: navbar}]}
+    { path: '/tranding', name:'Tranding', component: transactions}
 ]
 
 const router = createRouter({
